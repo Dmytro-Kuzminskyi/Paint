@@ -7,7 +7,7 @@ namespace Paint
 {
     class ImageProcessor
     {
-        private static Bitmap DrawControlToBitmap(Control c)
+        public static Bitmap DrawControlToBitmap(Control c)
         {
             var bitmap = new Bitmap(c.Width, c.Height);
             var graphics = Graphics.FromImage(bitmap);

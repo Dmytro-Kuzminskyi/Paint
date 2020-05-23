@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace Paint
@@ -23,8 +24,8 @@ namespace Paint
                 sSizePoint.Dispose();
                 eSizePoint.Dispose();
                 seSizePoint.Dispose();
-                img.Dispose();
-                img = null;
+                canvas.Image = new Bitmap(128, 128, PixelFormat.Format32bppPArgb);
+                canvas.Size = new Size(128, 128);
                 OnLoad(null);
             }
             catch (Exception ex) { Debug.WriteLine(ex.StackTrace); };
@@ -54,11 +55,10 @@ namespace Paint
                         sSizePoint.Dispose();
                         eSizePoint.Dispose();
                         seSizePoint.Dispose();
-                        img.Dispose();
-                        img = null;
                         using (var bmpTemp = Image.FromFile(ofd.FileName))
                         {
-                            img = new Bitmap(bmpTemp);
+                            canvas.Image = new Bitmap(bmpTemp);
+                            canvas.Size = bmpTemp.Size;
                         }
                         OnLoad(null);
                     }

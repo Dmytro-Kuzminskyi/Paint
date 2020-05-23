@@ -1,7 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace Paint
@@ -19,14 +17,11 @@ namespace Paint
         {
             if (drawLineButton.BackColor == SystemColors.Control)
             {
-                segmentGraphics = canvas.CreateGraphics();
-                segmentGraphics.SmoothingMode = SmoothingMode.AntiAlias;
                 drawningMode = DrawningMode.Line;
                 drawLineButton.BackColor = Color.LightBlue;
             } 
             else
             {
-                segmentGraphics.Dispose();
                 drawningMode = DrawningMode.Free;
                 drawLineButton.BackColor = SystemColors.Control;
             }

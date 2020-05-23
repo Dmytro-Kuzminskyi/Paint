@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
-using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 
 namespace Paint
 {
@@ -19,12 +20,11 @@ namespace Paint
             if (e.Button == MouseButtons.Left)
             {
                 resizeEnabled = false;
-                freeRoamGraphics = canvas.CreateGraphics();
-                freeRoamGraphics.SmoothingMode = SmoothingMode.AntiAlias;
-                if (drawningMode != DrawningMode.Free)
+                var tmp = new Bitmap(canvas.Width, canvas.Height, PixelFormat.Format32bppPArgb);
+                using (var g = Graphics.FromImage(tmp))
                 {
-                    segmentGraphics = canvas.CreateGraphics();
-                    segmentGraphics.SmoothingMode = SmoothingMode.AntiAlias;
+                    g.DrawImageUnscaled(canvas.Image, canvas.ClientRectangle);
+                    canvas.Image = tmp;
                 }
             }
         }

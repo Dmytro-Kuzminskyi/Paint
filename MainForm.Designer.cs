@@ -101,7 +101,7 @@
             // canvas
             // 
             this.canvas.BackColor = System.Drawing.SystemColors.Window;
-            this.canvas.Location = new System.Drawing.Point(0, 26);
+            this.canvas.Location = new System.Drawing.Point(0, 41);
             this.canvas.Margin = new System.Windows.Forms.Padding(1);
             this.canvas.Name = "canvas";
             this.canvas.Size = new System.Drawing.Size(128, 128);

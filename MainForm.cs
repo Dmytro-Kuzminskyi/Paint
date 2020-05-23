@@ -11,17 +11,12 @@ namespace Paint
     public partial class MainForm : Form
     {
         private PictureBox sSizePoint, eSizePoint, seSizePoint;
-        private Graphics freeRoamGraphics;
-        private Graphics segmentGraphics;
-        private Image img;
         private Pen pen;
 
         public MainForm()
         {
             InitializeComponent();
-            img = new Bitmap(128, 128);
-            freeRoamGraphics = canvas.CreateGraphics();
-            freeRoamGraphics.SmoothingMode = SmoothingMode.AntiAlias;
+            canvas.Image = new Bitmap(128, 128, PixelFormat.Format32bppPArgb);
             InitializePen(color0, float.Parse(thicknessValue.Text));
             SetColorButton(color0Button, color0);
             SetColorButton(color1Button, color1);
@@ -78,23 +73,16 @@ namespace Paint
             Controls.Add(seSizePoint);
             ((ISupportInitialize)(seSizePoint)).EndInit();
             seSizePoint.BringToFront();
-            if (img == null)
-                img = new Bitmap(128, 128);
-            canvas.Size = img.Size;
-            freeRoamGraphics = canvas.CreateGraphics();
-            freeRoamGraphics.SmoothingMode = SmoothingMode.AntiAlias;
-            if (drawningMode != DrawningMode.Free)
-            {
-                segmentGraphics = canvas.CreateGraphics();
-                segmentGraphics.SmoothingMode = SmoothingMode.AntiAlias;
-            }
-            imagePainted = false;
             isMainColorActivated = true;
             color0 = Color.Black;
             color1 = Color.White;
             SetColorButton(color0Button, color0);
             SetColorButton(color1Button, color1);
+            color0Button.BackColor = Color.LightBlue;
+            color1Button.BackColor = SystemColors.Control;
+            drawLineButton.BackColor = SystemColors.Control;
             InitializePen(color0, float.Parse(thicknessValue.Text));
+            drawningMode = DrawningMode.Free;
         }
 
         private void InitializePen(Color color, float width)

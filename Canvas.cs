@@ -7,7 +7,6 @@ namespace Paint
     public partial class MainForm
     {
         private bool isDrawningStarted = false;
-        private bool imagePainted = false;
         private Point? position;
 
         private void Canvas_MouseDown(object sender, MouseEventArgs e)
@@ -25,6 +24,8 @@ namespace Paint
             {
                 isDrawningStarted = false;
                 position = null;
+                if (drawningMode != DrawningMode.Free)
+                    canvas.Image = ImageProcessor.DrawControlToBitmap(canvas);
             }
         }
         private void Canvas_MouseEnter(object sender, EventArgs e)
@@ -50,31 +51,31 @@ namespace Paint
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
             canvasCoordinateLabel.Text = e.X.ToString() + ", " + e.Y.ToString() + "px";
-            if (drawningMode == DrawningMode.Free)
+            if (isDrawningStarted)
             {
-                if (isDrawningStarted)
+                if (drawningMode == DrawningMode.Free)
                 {
-                    freeRoamGraphics.DrawLine(pen, (PointF)position, e.Location);
+                    var g = Graphics.FromImage(canvas.Image);
+                    g.DrawLine(pen, (PointF)position, e.Location);
                     position = e.Location;
+                    canvas.Refresh();
+                    g.Dispose();
                 }
-            }
-            else if (drawningMode == DrawningMode.Line)
-            {
-                if (isDrawningStarted)
+                else if (drawningMode == DrawningMode.Line)
                 {
-                    segmentGraphics.Clear(Color.Transparent);
-                    segmentGraphics.DrawLine(pen, (PointF)position, e.Location);
+                    using (var g = canvas.CreateGraphics())
+                    {
+                        g.Clear(Color.White);
+                        canvas.Refresh();
+                        g.DrawLine(pen, (PointF)position, e.Location);
+                    }
                 }
             }
         }
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
-            if (filePath != null && img != null && !imagePainted)
-            {
-                e.Graphics.DrawImage(img, canvas.ClientRectangle);
-                imagePainted = true;
-            }
+            //e.Graphics.DrawImage(snapshot, new Point(0, 0));
         }
     }
 }
