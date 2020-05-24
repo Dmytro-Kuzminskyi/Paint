@@ -232,29 +232,33 @@
             // 
             this.rotateRightButton.Image = global::Paint.Properties.Resources.icons8_rotate_right_50;
             this.rotateRightButton.Name = "rotateRightButton";
-            this.rotateRightButton.Size = new System.Drawing.Size(156, 22);
+            this.rotateRightButton.Size = new System.Drawing.Size(180, 22);
             this.rotateRightButton.Text = "Rotate right 90°";
+            this.rotateRightButton.Click += new System.EventHandler(this.RotationButton_Click);
             // 
             // rotateLeftButton
             // 
             this.rotateLeftButton.Image = global::Paint.Properties.Resources.icons8_rotate_left_50;
             this.rotateLeftButton.Name = "rotateLeftButton";
-            this.rotateLeftButton.Size = new System.Drawing.Size(156, 22);
+            this.rotateLeftButton.Size = new System.Drawing.Size(180, 22);
             this.rotateLeftButton.Text = "Rotate left 90°";
+            this.rotateLeftButton.Click += new System.EventHandler(this.RotationButton_Click);
             // 
             // flipVerticalButton
             // 
             this.flipVerticalButton.Image = global::Paint.Properties.Resources.icons8_flip_vertical_50;
             this.flipVerticalButton.Name = "flipVerticalButton";
-            this.flipVerticalButton.Size = new System.Drawing.Size(156, 22);
+            this.flipVerticalButton.Size = new System.Drawing.Size(180, 22);
             this.flipVerticalButton.Text = "Flip vertical";
+            this.flipVerticalButton.Click += new System.EventHandler(this.RotationButton_Click);
             // 
             // flipHorizontalButton
             // 
             this.flipHorizontalButton.Image = global::Paint.Properties.Resources.icons8_flip_horizontal_50;
             this.flipHorizontalButton.Name = "flipHorizontalButton";
-            this.flipHorizontalButton.Size = new System.Drawing.Size(156, 22);
+            this.flipHorizontalButton.Size = new System.Drawing.Size(180, 22);
             this.flipHorizontalButton.Text = "Flip horizontal";
+            this.flipHorizontalButton.Click += new System.EventHandler(this.RotationButton_Click);
             // 
             // toolStripSeparator5
             // 
@@ -289,7 +293,7 @@
             this.thickness0.Size = new System.Drawing.Size(86, 22);
             this.thickness0.Tag = "";
             this.thickness0.Text = "1";
-            this.thickness0.Click += new System.EventHandler(this.Thickness_Click);
+            this.thickness0.Click += new System.EventHandler(this.ThicknessButton_Click);
             // 
             // thickness1
             // 
@@ -300,7 +304,7 @@
             this.thickness1.Size = new System.Drawing.Size(86, 22);
             this.thickness1.Tag = "";
             this.thickness1.Text = "4";
-            this.thickness1.Click += new System.EventHandler(this.Thickness_Click);
+            this.thickness1.Click += new System.EventHandler(this.ThicknessButton_Click);
             // 
             // thickness2
             // 
@@ -308,7 +312,7 @@
             this.thickness2.Name = "thickness2";
             this.thickness2.Size = new System.Drawing.Size(86, 22);
             this.thickness2.Text = "8";
-            this.thickness2.Click += new System.EventHandler(this.Thickness_Click);
+            this.thickness2.Click += new System.EventHandler(this.ThicknessButton_Click);
             // 
             // thickness3
             // 
@@ -316,7 +320,7 @@
             this.thickness3.Name = "thickness3";
             this.thickness3.Size = new System.Drawing.Size(86, 22);
             this.thickness3.Text = "12";
-            this.thickness3.Click += new System.EventHandler(this.Thickness_Click);
+            this.thickness3.Click += new System.EventHandler(this.ThicknessButton_Click);
             // 
             // toolStripSeparator6
             // 

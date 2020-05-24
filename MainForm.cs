@@ -83,7 +83,7 @@ namespace Paint
             drawningMode = DrawningMode.Free;
         }
 
-        private void Thickness_Click(object sender, EventArgs e)
+        private void ThicknessButton_Click(object sender, EventArgs e)
         {
             thickness0.Checked = false;
             thickness0.CheckState = CheckState.Unchecked;
@@ -97,6 +97,32 @@ namespace Paint
             s.Checked = true;
             s.CheckState = CheckState.Checked;
             thicknessValue.Text = s.Text;
+        }
+
+        private void RotationButton_Click(object sender, EventArgs e)
+        {
+            var s = sender as ToolStripMenuItem;
+            if (s == rotateRightButton)
+            {
+                var width = canvas.Width;
+                var height = canvas.Height;
+                canvas.Width = height;
+                canvas.Height = width;
+                canvas.Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
+            } 
+            else if (s == rotateLeftButton)
+            {
+                var width = canvas.Width;
+                var height = canvas.Height;
+                canvas.Width = height;
+                canvas.Height = width;
+                canvas.Image.RotateFlip(RotateFlipType.Rotate270FlipNone);
+            }
+            else if (s == flipHorizontalButton)
+                canvas.Image.RotateFlip(RotateFlipType.RotateNoneFlipX);
+            else if (s == flipVerticalButton)
+                canvas.Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            canvas.Invalidate();
         }
     }
 }
