@@ -110,6 +110,7 @@
             this.canvas.TabIndex = 1;
             this.canvas.TabStop = false;
             this.canvas.SizeChanged += new System.EventHandler(this.Canvas_SizeChanged);
+            this.canvas.Paint += new System.Windows.Forms.PaintEventHandler(this.Canvas_Paint);
             this.canvas.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Canvas_MouseDown);
             this.canvas.MouseEnter += new System.EventHandler(this.Canvas_MouseEnter);
             this.canvas.MouseLeave += new System.EventHandler(this.Canvas_MouseLeave);
@@ -231,28 +232,28 @@
             // 
             this.rotateRightButton.Image = global::Paint.Properties.Resources.icons8_rotate_right_50;
             this.rotateRightButton.Name = "rotateRightButton";
-            this.rotateRightButton.Size = new System.Drawing.Size(180, 22);
+            this.rotateRightButton.Size = new System.Drawing.Size(156, 22);
             this.rotateRightButton.Text = "Rotate right 90°";
             // 
             // rotateLeftButton
             // 
             this.rotateLeftButton.Image = global::Paint.Properties.Resources.icons8_rotate_left_50;
             this.rotateLeftButton.Name = "rotateLeftButton";
-            this.rotateLeftButton.Size = new System.Drawing.Size(180, 22);
+            this.rotateLeftButton.Size = new System.Drawing.Size(156, 22);
             this.rotateLeftButton.Text = "Rotate left 90°";
             // 
             // flipVerticalButton
             // 
             this.flipVerticalButton.Image = global::Paint.Properties.Resources.icons8_flip_vertical_50;
             this.flipVerticalButton.Name = "flipVerticalButton";
-            this.flipVerticalButton.Size = new System.Drawing.Size(180, 22);
+            this.flipVerticalButton.Size = new System.Drawing.Size(156, 22);
             this.flipVerticalButton.Text = "Flip vertical";
             // 
             // flipHorizontalButton
             // 
             this.flipHorizontalButton.Image = global::Paint.Properties.Resources.icons8_flip_horizontal_50;
             this.flipHorizontalButton.Name = "flipHorizontalButton";
-            this.flipHorizontalButton.Size = new System.Drawing.Size(180, 22);
+            this.flipHorizontalButton.Size = new System.Drawing.Size(156, 22);
             this.flipHorizontalButton.Text = "Flip horizontal";
             // 
             // toolStripSeparator5
