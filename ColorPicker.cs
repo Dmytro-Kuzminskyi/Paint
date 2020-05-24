@@ -48,10 +48,6 @@ namespace Paint
                 color0Button.BackColor = SystemColors.Control;
                 isMainColorActivated = false;
             }
-            if (isMainColorActivated)
-                InitializePen(color0, float.Parse(thicknessValue.Text));
-            else
-                InitializePen(color1, float.Parse(thicknessValue.Text));
         }
 
         private void PickColorButton_Click(object sender, EventArgs e)
@@ -65,13 +61,11 @@ namespace Paint
                     {
                         color0 = cd.Color;
                         SetColorButton(color0Button, color0);
-                        InitializePen(color0, float.Parse(thicknessValue.Text));
                     }
                     else
                     {
                         color1 = cd.Color;
                         SetColorButton(color1Button, color1);
-                        InitializePen(color1, float.Parse(thicknessValue.Text));
                     }
                 }
             }

@@ -40,8 +40,6 @@
             this.saveButton = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsButton = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.selectAreaButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.resizeButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.rotateButton = new System.Windows.Forms.ToolStripDropDownButton();
@@ -62,6 +60,10 @@
             this.pickColorButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.drawLineButton = new System.Windows.Forms.ToolStripButton();
+            this.drawRectangleButton = new System.Windows.Forms.ToolStripButton();
+            this.drawFilledRectangleButton = new System.Windows.Forms.ToolStripButton();
+            this.drawEllipseButton = new System.Windows.Forms.ToolStripButton();
+            this.drawFilledEllipseButton = new System.Windows.Forms.ToolStripButton();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.toolStrip1.SuspendLayout();
@@ -108,7 +110,6 @@
             this.canvas.TabIndex = 1;
             this.canvas.TabStop = false;
             this.canvas.SizeChanged += new System.EventHandler(this.Canvas_SizeChanged);
-            this.canvas.Paint += new System.Windows.Forms.PaintEventHandler(this.Canvas_Paint);
             this.canvas.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Canvas_MouseDown);
             this.canvas.MouseEnter += new System.EventHandler(this.Canvas_MouseEnter);
             this.canvas.MouseLeave += new System.EventHandler(this.Canvas_MouseLeave);
@@ -124,8 +125,6 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileButton,
             this.toolStripSeparator2,
-            this.selectAreaButton,
-            this.toolStripSeparator3,
             this.resizeButton,
             this.toolStripSeparator4,
             this.rotateButton,
@@ -137,7 +136,11 @@
             this.color1Button,
             this.pickColorButton,
             this.toolStripSeparator7,
-            this.drawLineButton});
+            this.drawLineButton,
+            this.drawRectangleButton,
+            this.drawFilledRectangleButton,
+            this.drawEllipseButton,
+            this.drawFilledEllipseButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(800, 40);
@@ -196,20 +199,6 @@
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 40);
             // 
-            // selectAreaButton
-            // 
-            this.selectAreaButton.AutoToolTip = false;
-            this.selectAreaButton.Image = global::Paint.Properties.Resources.dotted_selection;
-            this.selectAreaButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.selectAreaButton.Name = "selectAreaButton";
-            this.selectAreaButton.Size = new System.Drawing.Size(58, 37);
-            this.selectAreaButton.Text = "Select";
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 40);
-            // 
             // resizeButton
             // 
             this.resizeButton.AutoToolTip = false;
@@ -242,28 +231,28 @@
             // 
             this.rotateRightButton.Image = global::Paint.Properties.Resources.icons8_rotate_right_50;
             this.rotateRightButton.Name = "rotateRightButton";
-            this.rotateRightButton.Size = new System.Drawing.Size(156, 22);
+            this.rotateRightButton.Size = new System.Drawing.Size(180, 22);
             this.rotateRightButton.Text = "Rotate right 90°";
             // 
             // rotateLeftButton
             // 
             this.rotateLeftButton.Image = global::Paint.Properties.Resources.icons8_rotate_left_50;
             this.rotateLeftButton.Name = "rotateLeftButton";
-            this.rotateLeftButton.Size = new System.Drawing.Size(156, 22);
+            this.rotateLeftButton.Size = new System.Drawing.Size(180, 22);
             this.rotateLeftButton.Text = "Rotate left 90°";
             // 
             // flipVerticalButton
             // 
             this.flipVerticalButton.Image = global::Paint.Properties.Resources.icons8_flip_vertical_50;
             this.flipVerticalButton.Name = "flipVerticalButton";
-            this.flipVerticalButton.Size = new System.Drawing.Size(156, 22);
+            this.flipVerticalButton.Size = new System.Drawing.Size(180, 22);
             this.flipVerticalButton.Text = "Flip vertical";
             // 
             // flipHorizontalButton
             // 
             this.flipHorizontalButton.Image = global::Paint.Properties.Resources.icons8_flip_horizontal_50;
             this.flipHorizontalButton.Name = "flipHorizontalButton";
-            this.flipHorizontalButton.Size = new System.Drawing.Size(156, 22);
+            this.flipHorizontalButton.Size = new System.Drawing.Size(180, 22);
             this.flipHorizontalButton.Text = "Flip horizontal";
             // 
             // toolStripSeparator5
@@ -383,6 +372,46 @@
             this.drawLineButton.Text = "Line";
             this.drawLineButton.Click += new System.EventHandler(this.DrawLineButton_Click);
             // 
+            // drawRectangleButton
+            // 
+            this.drawRectangleButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.drawRectangleButton.Image = global::Paint.Properties.Resources.icons8_rectangular_64;
+            this.drawRectangleButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.drawRectangleButton.Name = "drawRectangleButton";
+            this.drawRectangleButton.Size = new System.Drawing.Size(23, 37);
+            this.drawRectangleButton.Text = "Rectangle";
+            this.drawRectangleButton.Click += new System.EventHandler(this.DrawRectangleButton_Click);
+            // 
+            // drawFilledRectangleButton
+            // 
+            this.drawFilledRectangleButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.drawFilledRectangleButton.Image = global::Paint.Properties.Resources.icons8_rectangle_64;
+            this.drawFilledRectangleButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.drawFilledRectangleButton.Name = "drawFilledRectangleButton";
+            this.drawFilledRectangleButton.Size = new System.Drawing.Size(23, 37);
+            this.drawFilledRectangleButton.Text = "Filled rectangle";
+            this.drawFilledRectangleButton.Click += new System.EventHandler(this.DrawFilledRectangleButton_Click);
+            // 
+            // drawEllipseButton
+            // 
+            this.drawEllipseButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.drawEllipseButton.Image = global::Paint.Properties.Resources.icons8_oval_64;
+            this.drawEllipseButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.drawEllipseButton.Name = "drawEllipseButton";
+            this.drawEllipseButton.Size = new System.Drawing.Size(23, 37);
+            this.drawEllipseButton.Text = "Ellipse";
+            this.drawEllipseButton.Click += new System.EventHandler(this.DrawEllipseButton_Click);
+            // 
+            // drawFilledEllipseButton
+            // 
+            this.drawFilledEllipseButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.drawFilledEllipseButton.Image = global::Paint.Properties.Resources.icons8_ellipse_64;
+            this.drawFilledEllipseButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.drawFilledEllipseButton.Name = "drawFilledEllipseButton";
+            this.drawFilledEllipseButton.Size = new System.Drawing.Size(23, 37);
+            this.drawFilledEllipseButton.Text = "Filled ellipse";
+            this.drawFilledEllipseButton.Click += new System.EventHandler(this.DrawFilledEllipseButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -418,8 +447,6 @@
         private System.Windows.Forms.ToolStripMenuItem saveButton;
         private System.Windows.Forms.ToolStripMenuItem saveAsButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripButton selectAreaButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton resizeButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripDropDownButton rotateButton;
@@ -440,6 +467,10 @@
         private System.Windows.Forms.ToolStripButton pickColorButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripButton drawLineButton;
+        private System.Windows.Forms.ToolStripButton drawRectangleButton;
+        private System.Windows.Forms.ToolStripButton drawFilledRectangleButton;
+        private System.Windows.Forms.ToolStripButton drawEllipseButton;
+        private System.Windows.Forms.ToolStripButton drawFilledEllipseButton;
     }
 }
 

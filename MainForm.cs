@@ -11,13 +11,11 @@ namespace Paint
     public partial class MainForm : Form
     {
         private PictureBox sSizePoint, eSizePoint, seSizePoint;
-        private Pen pen;
 
         public MainForm()
         {
             InitializeComponent();
             canvas.Image = new Bitmap(128, 128, PixelFormat.Format32bppPArgb);
-            InitializePen(color0, float.Parse(thicknessValue.Text));
             SetColorButton(color0Button, color0);
             SetColorButton(color1Button, color1);
             color0Button.BackColor = Color.LightBlue;
@@ -81,17 +79,9 @@ namespace Paint
             color0Button.BackColor = Color.LightBlue;
             color1Button.BackColor = SystemColors.Control;
             drawLineButton.BackColor = SystemColors.Control;
-            InitializePen(color0, float.Parse(thicknessValue.Text));
+            drawRectangleButton.BackColor = SystemColors.Control;
+            drawFilledRectangleButton.BackColor = SystemColors.Control;
             drawningMode = DrawningMode.Free;
-        }
-
-        private void InitializePen(Color color, float width)
-        {
-            if (pen != null)
-                pen.Dispose();
-            pen = new Pen(color);
-            pen.Width = width;
-            pen.SetLineCap(LineCap.Round, LineCap.Round, DashCap.Round);
         }
 
         private void Thickness_Click(object sender, EventArgs e)
@@ -108,10 +98,6 @@ namespace Paint
             s.Checked = true;
             s.CheckState = CheckState.Checked;
             thicknessValue.Text = s.Text;
-            if (isMainColorActivated)
-                InitializePen(color0, float.Parse(thicknessValue.Text));
-            else
-                InitializePen(color1, float.Parse(thicknessValue.Text));
         }
     }
 }
