@@ -64,6 +64,8 @@
             this.drawFilledRectangleButton = new System.Windows.Forms.ToolStripButton();
             this.drawEllipseButton = new System.Windows.Forms.ToolStripButton();
             this.drawFilledEllipseButton = new System.Windows.Forms.ToolStripButton();
+            this.eraserButton = new System.Windows.Forms.ToolStripButton();
+            this.canvasSizeLabel = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.toolStrip1.SuspendLayout();
@@ -71,13 +73,15 @@
             // 
             // toolStrip2
             // 
+            this.toolStrip2.AutoSize = false;
             this.toolStrip2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.toolStrip2.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStrip2.GripMargin = new System.Windows.Forms.Padding(0);
             this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.canvasCoordinateLabel,
-            this.toolStripSeparator1});
+            this.toolStripSeparator1,
+            this.canvasSizeLabel});
             this.toolStrip2.Location = new System.Drawing.Point(0, 425);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Size = new System.Drawing.Size(800, 25);
@@ -208,6 +212,7 @@
             this.resizeButton.Name = "resizeButton";
             this.resizeButton.Size = new System.Drawing.Size(59, 37);
             this.resizeButton.Text = "Resize";
+            this.resizeButton.Click += new System.EventHandler(this.ResizeButton_Click);
             // 
             // toolStripSeparator4
             // 
@@ -232,7 +237,7 @@
             // 
             this.rotateRightButton.Image = global::Paint.Properties.Resources.icons8_rotate_right_50;
             this.rotateRightButton.Name = "rotateRightButton";
-            this.rotateRightButton.Size = new System.Drawing.Size(180, 22);
+            this.rotateRightButton.Size = new System.Drawing.Size(156, 22);
             this.rotateRightButton.Text = "Rotate right 90°";
             this.rotateRightButton.Click += new System.EventHandler(this.RotationButton_Click);
             // 
@@ -240,7 +245,7 @@
             // 
             this.rotateLeftButton.Image = global::Paint.Properties.Resources.icons8_rotate_left_50;
             this.rotateLeftButton.Name = "rotateLeftButton";
-            this.rotateLeftButton.Size = new System.Drawing.Size(180, 22);
+            this.rotateLeftButton.Size = new System.Drawing.Size(156, 22);
             this.rotateLeftButton.Text = "Rotate left 90°";
             this.rotateLeftButton.Click += new System.EventHandler(this.RotationButton_Click);
             // 
@@ -248,7 +253,7 @@
             // 
             this.flipVerticalButton.Image = global::Paint.Properties.Resources.icons8_flip_vertical_50;
             this.flipVerticalButton.Name = "flipVerticalButton";
-            this.flipVerticalButton.Size = new System.Drawing.Size(180, 22);
+            this.flipVerticalButton.Size = new System.Drawing.Size(156, 22);
             this.flipVerticalButton.Text = "Flip vertical";
             this.flipVerticalButton.Click += new System.EventHandler(this.RotationButton_Click);
             // 
@@ -256,7 +261,7 @@
             // 
             this.flipHorizontalButton.Image = global::Paint.Properties.Resources.icons8_flip_horizontal_50;
             this.flipHorizontalButton.Name = "flipHorizontalButton";
-            this.flipHorizontalButton.Size = new System.Drawing.Size(180, 22);
+            this.flipHorizontalButton.Size = new System.Drawing.Size(156, 22);
             this.flipHorizontalButton.Text = "Flip horizontal";
             this.flipHorizontalButton.Click += new System.EventHandler(this.RotationButton_Click);
             // 
@@ -284,7 +289,7 @@
             this.thicknessValue.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.thicknessValue.Name = "thicknessValue";
             this.thicknessValue.Size = new System.Drawing.Size(26, 37);
-            this.thicknessValue.Text = "4";
+            this.thicknessValue.Text = "5";
             // 
             // thickness0
             // 
@@ -292,7 +297,7 @@
             this.thickness0.Name = "thickness0";
             this.thickness0.Size = new System.Drawing.Size(86, 22);
             this.thickness0.Tag = "";
-            this.thickness0.Text = "1";
+            this.thickness0.Text = "3";
             this.thickness0.Click += new System.EventHandler(this.ThicknessButton_Click);
             // 
             // thickness1
@@ -303,7 +308,7 @@
             this.thickness1.Name = "thickness1";
             this.thickness1.Size = new System.Drawing.Size(86, 22);
             this.thickness1.Tag = "";
-            this.thickness1.Text = "4";
+            this.thickness1.Text = "5";
             this.thickness1.Click += new System.EventHandler(this.ThicknessButton_Click);
             // 
             // thickness2
@@ -417,6 +422,27 @@
             this.drawFilledEllipseButton.Text = "Filled ellipse";
             this.drawFilledEllipseButton.Click += new System.EventHandler(this.DrawFilledEllipseButton_Click);
             // 
+            // eraserButton
+            // 
+            this.eraserButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.eraserButton.Image = global::Paint.Properties.Resources.icons8_eraser_64;
+            this.eraserButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.eraserButton.Name = "eraserButton";
+            this.eraserButton.Size = new System.Drawing.Size(23, 37);
+            this.eraserButton.Text = "Eraser";
+            this.eraserButton.Click += new System.EventHandler(this.EraserButton_Click);
+            // 
+            // canvasSizeLabel
+            // 
+            this.canvasSizeLabel.AutoSize = false;
+            this.canvasSizeLabel.Image = global::Paint.Properties.Resources.icons8_surface_64;
+            this.canvasSizeLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.canvasSizeLabel.Margin = new System.Windows.Forms.Padding(4, 1, 0, 2);
+            this.canvasSizeLabel.Name = "canvasSizeLabel";
+            this.canvasSizeLabel.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
+            this.canvasSizeLabel.Size = new System.Drawing.Size(100, 22);
+            this.canvasSizeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -436,7 +462,6 @@
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -476,6 +501,8 @@
         private System.Windows.Forms.ToolStripButton drawFilledRectangleButton;
         private System.Windows.Forms.ToolStripButton drawEllipseButton;
         private System.Windows.Forms.ToolStripButton drawFilledEllipseButton;
+        private System.Windows.Forms.ToolStripButton eraserButton;
+        private System.Windows.Forms.ToolStripLabel canvasSizeLabel;
     }
 }
 

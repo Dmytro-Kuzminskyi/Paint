@@ -7,12 +7,17 @@ namespace Paint
 {
     public partial class MainForm
     {
+        private int canvasInitialWidth, canvasInitialHeight;
         private bool resizeEnabled = false;
 
         private void SizePoint_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
+            {
                 resizeEnabled = true;
+                canvasInitialWidth = canvas.Width;
+                canvasInitialHeight = canvas.Height;
+            }
         }
 
         private void SizePoint_MouseUp(object sender, MouseEventArgs e)
@@ -20,6 +25,11 @@ namespace Paint
             if (e.Button == MouseButtons.Left)
             {
                 resizeEnabled = false;
+                if (canvas.Width == 0 || canvas.Height == 0)
+                {
+                    canvas.Width = canvasInitialWidth;
+                    canvas.Height = canvasInitialHeight;
+                }
                 var tmp = new Bitmap(canvas.Width, canvas.Height, PixelFormat.Format32bppPArgb);
                 using (var g = Graphics.FromImage(tmp))
                 {
@@ -47,9 +57,9 @@ namespace Paint
 
         private void SizePoint_MouseMove(object sender, MouseEventArgs e)
         {
-            var s = sender as PictureBox;
             if (resizeEnabled)
             {
+                var s = sender as PictureBox;
                 if (s == sSizePoint)
                     canvas.Height = canvas.Height - s.Height + e.Y;
                 else if (s == eSizePoint)

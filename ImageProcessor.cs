@@ -1,12 +1,22 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace Paint
 {
     class ImageProcessor
     {
+        [DllImport("user32.dll")]
+        private static extern IntPtr LoadCursorFromFile(string fileName);
+
+        public static Cursor ActuallyLoadCursor(string path)
+        {
+            return new Cursor(LoadCursorFromFile(path));
+        }
+
         public static Bitmap DrawControlToBitmap(Control c)
         {
             var bitmap = new Bitmap(c.Width, c.Height);

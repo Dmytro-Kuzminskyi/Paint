@@ -44,7 +44,7 @@ namespace Paint
                 ofd.Multiselect = false;
                 ofd.CheckFileExists = true;
                 ofd.CheckPathExists = true;
-                DialogResult result = ofd.ShowDialog();
+                var result = ofd.ShowDialog();
                 if (result == DialogResult.OK)
                 {
                     Controls.Remove(sSizePoint);
@@ -84,7 +84,7 @@ namespace Paint
                     sfd.DefaultExt = "bmp";
                     sfd.Filter = "Bitmap Files|*.bmp;*.dib|JPEG|*.jpg;*.jpeg;*.jpe;*.jfif|GIF|*.gif|" +
                         "TIFF|*.tif;*.tiff|PNG|*.png|ICO|*.ico";
-                    DialogResult result = sfd.ShowDialog();
+                    var result = sfd.ShowDialog();
                     if (result == DialogResult.OK)
                     {
                         Thread.Sleep(200);
@@ -142,7 +142,7 @@ namespace Paint
                 sfd.DefaultExt = "bmp";
                 sfd.Filter = "Bitmap Files|*.bmp;*.dib|JPEG|*.jpg;*.jpeg;*.jpe;*.jfif|GIF|*.gif|" +
                     "TIFF|*.tif;*.tiff|PNG|*.png|ICO|*.ico";
-                DialogResult result = sfd.ShowDialog();
+                var result = sfd.ShowDialog();
                 if (result == DialogResult.OK)
                 {
                     Thread.Sleep(200);

@@ -22,6 +22,7 @@ namespace Paint
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            canvasSizeLabel.Text = canvas.Width + " x " + canvas.Height + "px";
             Text = Resources.BASE_HEADER;
             int xOffset = canvas.Location.X;
             int yOffset = canvas.Location.Y;
@@ -83,6 +84,25 @@ namespace Paint
             drawningMode = DrawningMode.Free;
         }
 
+        private void ResizeButton_Click(object sender, EventArgs e)
+        {
+            using (var resizeDialog = new ResizeForm(canvas.Image.Width, canvas.Image.Height))
+            {
+                var result = resizeDialog.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    var width = resizeDialog.OutputWidth;
+                    var height = resizeDialog.OutputHeight;
+                    if (canvas.Width != width || canvas.Height != height)
+                    {
+                        canvas.Width = width;
+                        canvas.Height = height;
+                        canvas.Image = new Bitmap(canvas.Image, new Size(canvas.Width, canvas.Height));
+                    }
+                }
+            }
+        }
+
         private void ThicknessButton_Click(object sender, EventArgs e)
         {
             thickness0.Checked = false;
@@ -104,17 +124,16 @@ namespace Paint
             var s = sender as ToolStripMenuItem;
             if (s == rotateRightButton)
             {
+                
                 var width = canvas.Width;
-                var height = canvas.Height;
-                canvas.Width = height;
+                canvas.Width = canvas.Height;
                 canvas.Height = width;
                 canvas.Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
             } 
             else if (s == rotateLeftButton)
             {
                 var width = canvas.Width;
-                var height = canvas.Height;
-                canvas.Width = height;
+                canvas.Width = canvas.Height;
                 canvas.Height = width;
                 canvas.Image.RotateFlip(RotateFlipType.Rotate270FlipNone);
             }

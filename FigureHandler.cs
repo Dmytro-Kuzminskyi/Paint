@@ -10,6 +10,7 @@ namespace Paint
         private enum DrawningMode
         {
             Free,
+            Eraser,
             Line,
             Rectangle,
             FilledRectangle,
@@ -104,6 +105,25 @@ namespace Paint
             {
                 drawningMode = DrawningMode.Free;
                 drawFilledEllipseButton.BackColor = SystemColors.Control;
+            }
+        }
+
+        private void EraserButton_Click(object sender, EventArgs e)
+        {
+            drawLineButton.BackColor = SystemColors.Control;
+            drawRectangleButton.BackColor = SystemColors.Control;
+            drawFilledRectangleButton.BackColor = SystemColors.Control;
+            drawEllipseButton.BackColor = SystemColors.Control;
+            drawFilledEllipseButton.BackColor = SystemColors.Control;
+            if (eraserButton.BackColor == SystemColors.Control)
+            {
+                drawningMode = DrawningMode.Eraser;
+                eraserButton.BackColor = Color.LightBlue;
+            }
+            else
+            {
+                drawningMode = DrawningMode.Free;
+                eraserButton.BackColor = SystemColors.Control;
             }
         }
     }

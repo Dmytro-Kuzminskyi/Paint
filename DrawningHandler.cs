@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Paint.Properties;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -14,7 +15,25 @@ namespace Paint
 
         private void Canvas_MouseEnter(object sender, EventArgs e)
         {
-            Cursor = Cursors.Cross;
+            if (drawningMode == DrawningMode.Eraser)
+            {
+                var s = int.Parse(thicknessValue.Text);
+                using (var c = new Bitmap(s, s))
+                {
+                    using (var g = Graphics.FromImage(c))
+                    {
+                        g.Clear(Color.White);
+                        using (var p = new Pen(Color.Black, 1f))
+                        {
+                            g.DrawLines(p, new[] { new Point(0, 0), new Point(s - 1, 0), new Point(s - 1, s - 1),
+                            new Point(0, s - 1), new Point(0, 0) });
+                        }
+                    }
+                    Cursor = new Cursor(c.GetHicon());
+                }
+            }
+            else
+               Cursor = new Cursor(Resources.Crosshair.Handle);
         }
 
         private void Canvas_MouseLeave(object sender, EventArgs e)
@@ -25,6 +44,7 @@ namespace Paint
 
         private void Canvas_SizeChanged(object sender, EventArgs e)
         {
+            canvasSizeLabel.Text = canvas.Width + " x " + canvas.Height + "px";
             int xOffset = canvas.Location.X;
             int yOffset = canvas.Location.Y;
             sSizePoint.Location = new Point(canvas.Width / 2 - 3 + xOffset, canvas.Height + yOffset);
@@ -73,13 +93,27 @@ namespace Paint
                         }
                     }
                 }
+                if (drawningMode == DrawningMode.Eraser)
+                {
+                    using (var g = Graphics.FromImage(canvas.Image))
+                    {
+                        using (var pen = new Pen(Color.White))
+                        {
+                            pen.Width = float.Parse(thicknessValue.Text);
+                            pen.SetLineCap(LineCap.Round, LineCap.Round, DashCap.Round);
+                            g.DrawLine(pen, x0, y0, e.X, e.Y);
+                            x0 = e.X;
+                            y0 = e.Y;
+                        }
+                    }
+                }
                 canvas.Invalidate();
             }            
         }
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
-            if (isDrawningStarted && drawningMode != DrawningMode.Free)
+            if (isDrawningStarted && drawningMode != DrawningMode.Free && drawningMode != DrawningMode.Eraser)
             {
                 CreateFigure(e);
             }

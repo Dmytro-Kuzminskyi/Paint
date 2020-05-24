@@ -23,8 +23,8 @@ namespace Paint
                         graphics.Clear(c);
                         using (var p = new Pen(Color.Black, 1f))
                         {
-                            graphics.DrawLines(p,
-                                new[] { new Point(0, 0), new Point(15, 0), new Point(15, 15), new Point(0, 15), new Point(0, 0) });
+                            graphics.DrawLines(p, new[] { new Point(0, 0), new Point(15, 0), new Point(15, 15), 
+                                new Point(0, 15), new Point(0, 0) });
                         }
                         tmp.Save(memoryStream, ImageFormat.Bmp);
                         btn.Image = Image.FromStream(memoryStream);
