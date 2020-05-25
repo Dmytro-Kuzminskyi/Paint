@@ -24,6 +24,7 @@ namespace Paint
             drawFilledRectangleButton.BackColor = SystemColors.Control;
             drawEllipseButton.BackColor = SystemColors.Control;
             drawFilledEllipseButton.BackColor = SystemColors.Control;
+            eraserButton.BackColor = SystemColors.Control;
             if (drawLineButton.BackColor == SystemColors.Control)
             {
                 drawningMode = DrawningMode.Line;
@@ -42,6 +43,7 @@ namespace Paint
             drawFilledRectangleButton.BackColor = SystemColors.Control;
             drawEllipseButton.BackColor = SystemColors.Control;
             drawFilledEllipseButton.BackColor = SystemColors.Control;
+            eraserButton.BackColor = SystemColors.Control;
             if (drawRectangleButton.BackColor == SystemColors.Control)
             {
                 drawningMode = DrawningMode.Rectangle;
@@ -60,6 +62,7 @@ namespace Paint
             drawRectangleButton.BackColor = SystemColors.Control;
             drawEllipseButton.BackColor = SystemColors.Control;
             drawFilledEllipseButton.BackColor = SystemColors.Control;
+            eraserButton.BackColor = SystemColors.Control;
             if (drawFilledRectangleButton.BackColor == SystemColors.Control)
             {
                 drawningMode = DrawningMode.FilledRectangle;
@@ -78,6 +81,7 @@ namespace Paint
             drawRectangleButton.BackColor = SystemColors.Control;
             drawFilledRectangleButton.BackColor = SystemColors.Control;
             drawFilledEllipseButton.BackColor = SystemColors.Control;
+            eraserButton.BackColor = SystemColors.Control;
             if (drawEllipseButton.BackColor == SystemColors.Control)
             {
                 drawningMode = DrawningMode.Ellipse;
@@ -96,6 +100,7 @@ namespace Paint
             drawRectangleButton.BackColor = SystemColors.Control;
             drawFilledRectangleButton.BackColor = SystemColors.Control;
             drawEllipseButton.BackColor = SystemColors.Control;
+            eraserButton.BackColor = SystemColors.Control;
             if (drawFilledEllipseButton.BackColor == SystemColors.Control)
             {
                 drawningMode = DrawningMode.FilledEllipse;

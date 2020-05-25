@@ -141,6 +141,7 @@
             this.color1Button,
             this.pickColorButton,
             this.toolStripSeparator7,
+            this.eraserButton,
             this.drawLineButton,
             this.drawRectangleButton,
             this.drawFilledRectangleButton,
