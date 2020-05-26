@@ -2,19 +2,45 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace Paint
 {
     public partial class MainForm : Form
     {
+        public const int CANVAS_OFFSET = 16;
+        private Operation operation;
+        private DrawningMode drawningMode;
         private PictureBox sSizePoint, eSizePoint, seSizePoint;
+        private Canvas canvas;
+        private Layer layer;
+
+        [DllImport("user32.dll")]
+        private static extern int SendMessage(IntPtr hwnd, int wMsg, int wParam, int lParam);
+        private const int WM_SETREDRAW = 0xB;
+
+        private enum Operation
+        {
+            None,
+            Resize,
+            Drawning
+        }
 
         public MainForm()
         {
+            canvas = new Canvas(128, 128);           
+            layer = new Layer();
+            layer.Name = "layer";
+            layer.Dock = DockStyle.Fill;
+            layer.AutoScroll = true;
+            layer.Paint += new PaintEventHandler(Layer_Paint);
+            layer.MouseUp += new MouseEventHandler(Layer_MouseUp);
+            layer.MouseDown += new MouseEventHandler(Layer_MouseDown);
+            layer.MouseMove += new MouseEventHandler(Layer_MouseMove);
+            layer.Scroll += new ScrollEventHandler(Layer_Scroll);
+            Controls.Add(layer);
             InitializeComponent();
-            canvas.Image = new Bitmap(128, 128, PixelFormat.Format32bppPArgb);
             SetColorButton(color0Button, color0);
             SetColorButton(color1Button, color1);
             color0Button.BackColor = Color.LightBlue;
@@ -22,15 +48,13 @@ namespace Paint
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            canvasSizeLabel.Text = canvas.Width + " x " + canvas.Height + "px";
+            layerSizeLabel.Text = canvas.Width + " x " + canvas.Height + "px";
             Text = Resources.BASE_HEADER;
-            int xOffset = canvas.Location.X;
-            int yOffset = canvas.Location.Y;
             sSizePoint = new PictureBox();
             ((ISupportInitialize)(sSizePoint)).BeginInit();
             sSizePoint.BackColor = SystemColors.Window;
             sSizePoint.BorderStyle = BorderStyle.FixedSingle;
-            sSizePoint.Location = new Point(canvas.Width / 2 - 3 + xOffset, canvas.Height + yOffset);
+            sSizePoint.Location = new Point(canvas.Width / 2 - 3 + CANVAS_OFFSET, canvas.Height + CANVAS_OFFSET);
             sSizePoint.Name = "sSizePoint";
             sSizePoint.Size = new Size(6, 6);
             sSizePoint.MouseEnter += new EventHandler(SizePoint_MouseEnter);
@@ -38,14 +62,14 @@ namespace Paint
             sSizePoint.MouseDown += new MouseEventHandler(SizePoint_MouseDown);
             sSizePoint.MouseUp += new MouseEventHandler(SizePoint_MouseUp);
             sSizePoint.MouseMove += new MouseEventHandler(SizePoint_MouseMove);
-            Controls.Add(sSizePoint);
+            layer.Controls.Add(sSizePoint);
             ((ISupportInitialize)(sSizePoint)).EndInit();
             sSizePoint.BringToFront();
             eSizePoint = new PictureBox();
             ((ISupportInitialize)(eSizePoint)).BeginInit();
             eSizePoint.BackColor = SystemColors.Window;
             eSizePoint.BorderStyle = BorderStyle.FixedSingle;
-            eSizePoint.Location = new Point(canvas.Width + xOffset, canvas.Height / 2 - 3 + yOffset);
+            eSizePoint.Location = new Point(canvas.Width + CANVAS_OFFSET, canvas.Height / 2 - 3 + CANVAS_OFFSET);
             eSizePoint.Name = "eSizePoint";
             eSizePoint.Size = new Size(6, 6);
             eSizePoint.MouseEnter += new EventHandler(SizePoint_MouseEnter);
@@ -53,14 +77,14 @@ namespace Paint
             eSizePoint.MouseDown += new MouseEventHandler(SizePoint_MouseDown);
             eSizePoint.MouseUp += new MouseEventHandler(SizePoint_MouseUp);
             eSizePoint.MouseMove += new MouseEventHandler(SizePoint_MouseMove);
-            Controls.Add(eSizePoint);
+            layer.Controls.Add(eSizePoint);
             ((ISupportInitialize)(eSizePoint)).EndInit();
             eSizePoint.BringToFront();
             seSizePoint = new PictureBox();
             ((ISupportInitialize)(seSizePoint)).BeginInit();
             seSizePoint.BackColor = SystemColors.Window;
             seSizePoint.BorderStyle = BorderStyle.FixedSingle;
-            seSizePoint.Location = new Point(canvas.Width + xOffset, canvas.Height + yOffset);
+            seSizePoint.Location = new Point(canvas.Width + CANVAS_OFFSET, canvas.Height + CANVAS_OFFSET);
             seSizePoint.Name = "seSizePoint";
             seSizePoint.Size = new Size(6, 6);
             seSizePoint.MouseEnter += new EventHandler(SizePoint_MouseEnter);
@@ -68,7 +92,7 @@ namespace Paint
             seSizePoint.MouseDown += new MouseEventHandler(SizePoint_MouseDown);
             seSizePoint.MouseUp += new MouseEventHandler(SizePoint_MouseUp);
             seSizePoint.MouseMove += new MouseEventHandler(SizePoint_MouseMove);
-            Controls.Add(seSizePoint);
+            layer.Controls.Add(seSizePoint);
             ((ISupportInitialize)(seSizePoint)).EndInit();
             seSizePoint.BringToFront();
             isMainColorActivated = true;
@@ -77,15 +101,34 @@ namespace Paint
             SetColorButton(color0Button, color0);
             SetColorButton(color1Button, color1);
             color0Button.BackColor = Color.LightBlue;
-            color1Button.BackColor = SystemColors.Control;
-            drawLineButton.BackColor = SystemColors.Control;
-            drawRectangleButton.BackColor = SystemColors.Control;
-            drawFilledRectangleButton.BackColor = SystemColors.Control;
+            color1Button.BackColor = SystemColors.Window;
+            drawLineButton.BackColor = SystemColors.Window;
+            drawRectangleButton.BackColor = SystemColors.Window;
+            drawFilledRectangleButton.BackColor = SystemColors.Window;
+            drawEllipseButton.BackColor = SystemColors.Window;
+            drawFilledEllipseButton.BackColor = SystemColors.Window;
             drawningMode = DrawningMode.Free;
+            operation = Operation.None;
+        }
+
+        private void Layer_Scroll(object sender, ScrollEventArgs e)
+        {
+            Control s = sender as Control;
+            if (e.Type == ScrollEventType.ThumbTrack)
+            {
+                SendMessage(s.Handle, WM_SETREDRAW, 1, 0);
+                s.Refresh();                        
+                SendMessage(s.Handle, WM_SETREDRAW, 0, 0);
+            }
+            else
+            {
+                SendMessage(s.Handle, WM_SETREDRAW, 1, 0);
+                s.Invalidate();
+            }
         }
 
         private void ResizeButton_Click(object sender, EventArgs e)
-        {
+        {/*
             using (var resizeDialog = new ResizeForm(canvas.Image.Width, canvas.Image.Height))
             {
                 var result = resizeDialog.ShowDialog();
@@ -100,7 +143,7 @@ namespace Paint
                         canvas.Image = new Bitmap(canvas.Image, new Size(canvas.Width, canvas.Height));
                     }
                 }
-            }
+            }*/
         }
 
         private void ThicknessButton_Click(object sender, EventArgs e)
@@ -141,7 +184,7 @@ namespace Paint
                 canvas.Image.RotateFlip(RotateFlipType.RotateNoneFlipX);
             else if (s == flipVerticalButton)
                 canvas.Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            canvas.Invalidate();
+            layer.Invalidate();
         }
     }
 }

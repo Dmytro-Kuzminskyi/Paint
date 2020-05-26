@@ -118,7 +118,7 @@ namespace Paint
                             canvas.Width + resizeDX, canvas.Height + resizeDY));
                 }
             }
-            else if (operation == Operation.Drawning)
+            if (operation == Operation.Drawning)
             {
                 if (drawningMode != DrawningMode.Free && drawningMode != DrawningMode.Eraser)
                     isDrawCompleted = CreateFigure(e);               
