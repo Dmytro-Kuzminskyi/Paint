@@ -39,13 +39,13 @@ namespace Paint
             if (s.Tag.ToString() == 0.ToString())
             {
                 s.BackColor = Color.LightBlue;
-                color1Button.BackColor = SystemColors.Control;
+                color1Button.BackColor = SystemColors.Window;
                 isMainColorActivated = true;
             } 
             else
             {
                 s.BackColor = Color.LightBlue;
-                color0Button.BackColor = SystemColors.Control;
+                color0Button.BackColor = SystemColors.Window;
                 isMainColorActivated = false;
             }
         }

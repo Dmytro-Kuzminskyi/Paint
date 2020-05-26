@@ -1,7 +1,7 @@
 ﻿using System;
 using Paint.Properties;
 using System.Drawing;
-
+using System.Windows.Forms;
 
 namespace Paint
 {
@@ -15,22 +15,22 @@ namespace Paint
         {
             Width = width;
             Height = height;
-            Image = Resources.canvas;
+            Image = new Bitmap(Resources.canvas, new Size(width, height));
         }
 
-        public Canvas(int width, int height, Bitmap img)
+        public Canvas(Bitmap img)
         {
-            Width = width;
-            Height = height;
+            Width = img.Width;
+            Height = img.Height;
             Image = img;
         }
-
         public void UpdateImage()
         {
-            var b = new Bitmap(Resources.canvas, Width, Height);
+            var b =  new Bitmap(Resources.canvas, Width, Height);
             using (var g = Graphics.FromImage(b))
             {
                 g.DrawImage(Image, 0, 0);
+                Dispose();
                 Image = b;
             }
         }

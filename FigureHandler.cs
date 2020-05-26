@@ -6,7 +6,6 @@ namespace Paint
 {
     public partial class MainForm : Form
     {
-        private DrawningMode drawningMode = DrawningMode.Free;
         private enum DrawningMode
         {
             Free,
@@ -20,12 +19,12 @@ namespace Paint
 
         private void DrawLineButton_Click(object sender, EventArgs e)
         {
-            drawRectangleButton.BackColor = SystemColors.Control;
-            drawFilledRectangleButton.BackColor = SystemColors.Control;
-            drawEllipseButton.BackColor = SystemColors.Control;
-            drawFilledEllipseButton.BackColor = SystemColors.Control;
-            eraserButton.BackColor = SystemColors.Control;
-            if (drawLineButton.BackColor == SystemColors.Control)
+            drawRectangleButton.BackColor = SystemColors.Window;
+            drawFilledRectangleButton.BackColor = SystemColors.Window;
+            drawEllipseButton.BackColor = SystemColors.Window;
+            drawFilledEllipseButton.BackColor = SystemColors.Window;
+            eraserButton.BackColor = SystemColors.Window;
+            if (drawLineButton.BackColor == SystemColors.Window)
             {
                 drawningMode = DrawningMode.Line;
                 drawLineButton.BackColor = Color.LightBlue;
@@ -33,18 +32,18 @@ namespace Paint
             else
             {
                 drawningMode = DrawningMode.Free;
-                drawLineButton.BackColor = SystemColors.Control;
+                drawLineButton.BackColor = SystemColors.Window;
             }
         }
 
         private void DrawRectangleButton_Click(object sender, EventArgs e)
         {
-            drawLineButton.BackColor = SystemColors.Control;
-            drawFilledRectangleButton.BackColor = SystemColors.Control;
-            drawEllipseButton.BackColor = SystemColors.Control;
-            drawFilledEllipseButton.BackColor = SystemColors.Control;
-            eraserButton.BackColor = SystemColors.Control;
-            if (drawRectangleButton.BackColor == SystemColors.Control)
+            drawLineButton.BackColor = SystemColors.Window;
+            drawFilledRectangleButton.BackColor = SystemColors.Window;
+            drawEllipseButton.BackColor = SystemColors.Window;
+            drawFilledEllipseButton.BackColor = SystemColors.Window;
+            eraserButton.BackColor = SystemColors.Window;
+            if (drawRectangleButton.BackColor == SystemColors.Window)
             {
                 drawningMode = DrawningMode.Rectangle;
                 drawRectangleButton.BackColor = Color.LightBlue;
@@ -52,18 +51,18 @@ namespace Paint
             else
             {
                 drawningMode = DrawningMode.Free;
-                drawRectangleButton.BackColor = SystemColors.Control;
+                drawRectangleButton.BackColor = SystemColors.Window;
             }
         }
 
         private void DrawFilledRectangleButton_Click(object sender, EventArgs e)
         {
-            drawLineButton.BackColor = SystemColors.Control;
-            drawRectangleButton.BackColor = SystemColors.Control;
-            drawEllipseButton.BackColor = SystemColors.Control;
-            drawFilledEllipseButton.BackColor = SystemColors.Control;
-            eraserButton.BackColor = SystemColors.Control;
-            if (drawFilledRectangleButton.BackColor == SystemColors.Control)
+            drawLineButton.BackColor = SystemColors.Window;
+            drawRectangleButton.BackColor = SystemColors.Window;
+            drawEllipseButton.BackColor = SystemColors.Window;
+            drawFilledEllipseButton.BackColor = SystemColors.Window;
+            eraserButton.BackColor = SystemColors.Window;
+            if (drawFilledRectangleButton.BackColor == SystemColors.Window)
             {
                 drawningMode = DrawningMode.FilledRectangle;
                 drawFilledRectangleButton.BackColor = Color.LightBlue;
@@ -71,18 +70,18 @@ namespace Paint
             else
             {
                 drawningMode = DrawningMode.Free;
-                drawFilledRectangleButton.BackColor = SystemColors.Control;
+                drawFilledRectangleButton.BackColor = SystemColors.Window;
             }
         }
 
         private void DrawEllipseButton_Click(object sender, EventArgs e)
         {
-            drawLineButton.BackColor = SystemColors.Control;
-            drawRectangleButton.BackColor = SystemColors.Control;
-            drawFilledRectangleButton.BackColor = SystemColors.Control;
-            drawFilledEllipseButton.BackColor = SystemColors.Control;
-            eraserButton.BackColor = SystemColors.Control;
-            if (drawEllipseButton.BackColor == SystemColors.Control)
+            drawLineButton.BackColor = SystemColors.Window;
+            drawRectangleButton.BackColor = SystemColors.Window;
+            drawFilledRectangleButton.BackColor = SystemColors.Window;
+            drawFilledEllipseButton.BackColor = SystemColors.Window;
+            eraserButton.BackColor = SystemColors.Window;
+            if (drawEllipseButton.BackColor == SystemColors.Window)
             {
                 drawningMode = DrawningMode.Ellipse;
                 drawEllipseButton.BackColor = Color.LightBlue;
@@ -90,18 +89,18 @@ namespace Paint
             else
             {
                 drawningMode = DrawningMode.Free;
-                drawEllipseButton.BackColor = SystemColors.Control;
+                drawEllipseButton.BackColor = SystemColors.Window;
             }
         }
 
         private void DrawFilledEllipseButton_Click(object sender, EventArgs e)
         {
-            drawLineButton.BackColor = SystemColors.Control;
-            drawRectangleButton.BackColor = SystemColors.Control;
-            drawFilledRectangleButton.BackColor = SystemColors.Control;
-            drawEllipseButton.BackColor = SystemColors.Control;
-            eraserButton.BackColor = SystemColors.Control;
-            if (drawFilledEllipseButton.BackColor == SystemColors.Control)
+            drawLineButton.BackColor = SystemColors.Window;
+            drawRectangleButton.BackColor = SystemColors.Window;
+            drawFilledRectangleButton.BackColor = SystemColors.Window;
+            drawEllipseButton.BackColor = SystemColors.Window;
+            eraserButton.BackColor = SystemColors.Window;
+            if (drawFilledEllipseButton.BackColor == SystemColors.Window)
             {
                 drawningMode = DrawningMode.FilledEllipse;
                 drawFilledEllipseButton.BackColor = Color.LightBlue;
@@ -109,18 +108,18 @@ namespace Paint
             else
             {
                 drawningMode = DrawningMode.Free;
-                drawFilledEllipseButton.BackColor = SystemColors.Control;
+                drawFilledEllipseButton.BackColor = SystemColors.Window;
             }
         }
 
         private void EraserButton_Click(object sender, EventArgs e)
         {
-            drawLineButton.BackColor = SystemColors.Control;
-            drawRectangleButton.BackColor = SystemColors.Control;
-            drawFilledRectangleButton.BackColor = SystemColors.Control;
-            drawEllipseButton.BackColor = SystemColors.Control;
-            drawFilledEllipseButton.BackColor = SystemColors.Control;
-            if (eraserButton.BackColor == SystemColors.Control)
+            drawLineButton.BackColor = SystemColors.Window;
+            drawRectangleButton.BackColor = SystemColors.Window;
+            drawFilledRectangleButton.BackColor = SystemColors.Window;
+            drawEllipseButton.BackColor = SystemColors.Window;
+            drawFilledEllipseButton.BackColor = SystemColors.Window;
+            if (eraserButton.BackColor == SystemColors.Window)
             {
                 drawningMode = DrawningMode.Eraser;
                 eraserButton.BackColor = Color.LightBlue;
@@ -128,7 +127,7 @@ namespace Paint
             else
             {
                 drawningMode = DrawningMode.Free;
-                eraserButton.BackColor = SystemColors.Control;
+                eraserButton.BackColor = SystemColors.Window;
             }
         }
     }

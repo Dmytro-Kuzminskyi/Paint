@@ -24,8 +24,8 @@ namespace Paint
                 sSizePoint.Dispose();
                 eSizePoint.Dispose();
                 seSizePoint.Dispose();
-                canvas.Image = new Bitmap(128, 128, PixelFormat.Format32bppPArgb);
-                canvas.Size = new Size(128, 128);
+                canvas.Dispose();
+                canvas = new Canvas(128, 128);
                 OnLoad(null);
             }
             catch (Exception ex) { Debug.WriteLine(ex.StackTrace); };
@@ -50,19 +50,13 @@ namespace Paint
                     Controls.Remove(sSizePoint);
                     Controls.Remove(eSizePoint);
                     Controls.Remove(seSizePoint);
-                    try
-                    {
-                        sSizePoint.Dispose();
-                        eSizePoint.Dispose();
-                        seSizePoint.Dispose();
-                        using (var bmpTemp = Image.FromFile(ofd.FileName))
-                        {
-                            canvas.Image = new Bitmap(bmpTemp);
-                            canvas.Size = bmpTemp.Size;
-                        }
-                        OnLoad(null);
-                    }
-                    catch (Exception ex) { Debug.WriteLine(ex.StackTrace); };
+                    sSizePoint.Dispose();
+                    eSizePoint.Dispose();
+                    seSizePoint.Dispose();
+                    var bmpTemp = (Bitmap)Image.FromFile(ofd.FileName);
+                    canvas.Dispose();
+                    canvas = new Canvas(bmpTemp);
+                    OnLoad(null);
                     filePath = ofd.FileName;
                     fileName = Path.GetFileNameWithoutExtension(ofd.FileName);
                     extension = Path.GetExtension(ofd.FileName);
@@ -87,47 +81,45 @@ namespace Paint
                     var result = sfd.ShowDialog();
                     if (result == DialogResult.OK)
                     {
-                        Thread.Sleep(200);
                         filePath = sfd.FileName;
                         fileName = Path.GetFileNameWithoutExtension(sfd.FileName);
                         extension = Path.GetExtension(sfd.FileName);
                         if (extension == ".bmp" || extension == ".dib")
-                            ImageProcessor.SaveImage(canvas, "image/bmp", sfd.FileName);
+                            ImageProcessor.SaveImage(canvas.Image, "image/bmp", sfd.FileName);
                         else if (extension == ".jpg" || extension == ".jpeg" || extension == ".jpe")
-                            ImageProcessor.SaveImage(canvas, "image/jpeg", sfd.FileName);
+                            ImageProcessor.SaveImage(canvas.Image, "image/jpeg", sfd.FileName);
                         else if (extension == ".jfif")
-                            ImageProcessor.SaveImage(canvas, "image/pjpeg", sfd.FileName);
+                            ImageProcessor.SaveImage(canvas.Image, "image/pjpeg", sfd.FileName);
                         else if (extension == ".gif")
-                            ImageProcessor.SaveImage(canvas, "image/gif", sfd.FileName);
+                            ImageProcessor.SaveImage(canvas.Image, "image/gif", sfd.FileName);
                         else if (extension == ".tif" || extension == ".tiff")
-                            ImageProcessor.SaveImage(canvas, "image/tiff", sfd.FileName);
+                            ImageProcessor.SaveImage(canvas.Image, "image/tiff", sfd.FileName);
                         else if (extension == ".png")
-                            ImageProcessor.SaveImage(canvas, "image/png", sfd.FileName);
+                            ImageProcessor.SaveImage(canvas.Image, "image/png", sfd.FileName);
                         else if (extension == ".ico")
-                            ImageProcessor.SaveImage(canvas, "image/x-icon", sfd.FileName);
+                            ImageProcessor.SaveImage(canvas.Image, "image/x-icon", sfd.FileName);
                         Text = fileName + " - Paint";
                     }
                 }
             }
             else
             {
-                Thread.Sleep(200);
                 if (extension == ".bmp" || extension == ".dib")
-                    ImageProcessor.SaveImage(canvas, "image/bmp", filePath);
+                    ImageProcessor.SaveImage(canvas.Image, "image/bmp", filePath);
                 else if (extension == ".jpg" || extension == ".jpeg" || extension == ".jpe")
-                    ImageProcessor.SaveImage(canvas, "image/jpeg", filePath);
+                    ImageProcessor.SaveImage(canvas.Image, "image/jpeg", filePath);
                 else if (extension == ".jfif")
-                    ImageProcessor.SaveImage(canvas, "image/pjpeg", filePath);
+                    ImageProcessor.SaveImage(canvas.Image, "image/pjpeg", filePath);
                 else if (extension == ".gif")
-                    ImageProcessor.SaveImage(canvas, "image/gif", filePath);
+                    ImageProcessor.SaveImage(canvas.Image, "image/gif", filePath);
                 else if (extension == ".tif" || extension == ".tiff")
-                    ImageProcessor.SaveImage(canvas, "image/tiff", filePath);
+                    ImageProcessor.SaveImage(canvas.Image, "image/tiff", filePath);
                 else if (extension == ".png")
-                    ImageProcessor.SaveImage(canvas, "image/png", filePath);
+                    ImageProcessor.SaveImage(canvas.Image, "image/png", filePath);
                 else if (extension == ".ico")
-                    ImageProcessor.SaveImage(canvas, "image/x-icon", filePath);
+                    ImageProcessor.SaveImage(canvas.Image, "image/x-icon", filePath);
                 else
-                    ImageProcessor.SaveImage(canvas, "image/bmp", filePath);
+                    ImageProcessor.SaveImage(canvas.Image, "image/bmp", filePath);
             }
         }
 
@@ -145,24 +137,23 @@ namespace Paint
                 var result = sfd.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    Thread.Sleep(200);
                     filePath = sfd.FileName;
                     fileName = Path.GetFileNameWithoutExtension(sfd.FileName);
                     extension = Path.GetExtension(sfd.FileName);
                     if (extension == ".bmp" || extension == ".dib")
-                        ImageProcessor.SaveImage(canvas, "image/bmp", sfd.FileName);
+                        ImageProcessor.SaveImage(canvas.Image, "image/bmp", sfd.FileName);
                     else if (extension == ".jpg" || extension == ".jpeg" || extension == ".jpe")
-                        ImageProcessor.SaveImage(canvas, "image/jpeg", sfd.FileName);
+                        ImageProcessor.SaveImage(canvas.Image, "image/jpeg", sfd.FileName);
                     else if (extension == ".jfif")
-                        ImageProcessor.SaveImage(canvas, "image/pjpeg", sfd.FileName);
+                        ImageProcessor.SaveImage(canvas.Image, "image/pjpeg", sfd.FileName);
                     else if (extension == ".gif")
-                        ImageProcessor.SaveImage(canvas, "image/gif", sfd.FileName);
+                        ImageProcessor.SaveImage(canvas.Image, "image/gif", sfd.FileName);
                     else if (extension == ".tif" || extension == ".tiff")
-                        ImageProcessor.SaveImage(canvas, "image/tiff", sfd.FileName);
+                        ImageProcessor.SaveImage(canvas.Image, "image/tiff", sfd.FileName);
                     else if (extension == ".png")
-                        ImageProcessor.SaveImage(canvas, "image/png", sfd.FileName);
+                        ImageProcessor.SaveImage(canvas.Image, "image/png", sfd.FileName);
                     else if (extension == ".ico")
-                        ImageProcessor.SaveImage(canvas, "image/x-icon", sfd.FileName);
+                        ImageProcessor.SaveImage(canvas.Image, "image/x-icon", sfd.FileName);
                     Text = fileName + " - Paint";
                 }
             }
