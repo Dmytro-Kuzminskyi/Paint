@@ -66,7 +66,7 @@ namespace Paint
                     canvas.Height = canvasInitialHeight;
                 } 
                 else
-                    canvas.UpdateImage();
+                    canvas.UpdateImage(null);
                 layer.Invalidate();
             }
         }

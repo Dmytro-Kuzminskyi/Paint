@@ -10,188 +10,285 @@ namespace Paint
     {
         Action<Pen, Rectangle> drawFigureAction;
         Action<Brush, Rectangle> fillFigureAction;
-        private bool isDrawningStarted = false;
-        private int x0, y0, x1, y1;
+        private bool isCanvasArea = false;
+        private bool isDrawCompleted = false;
+        private int posX, posY, posFX, posFY;
 
-        private void Canvas_MouseEnter(object sender, EventArgs e)
-        {
-            if (drawningMode == DrawningMode.Eraser)
-            {
-                var s = int.Parse(thicknessValue.Text);
-                using (var c = new Bitmap(s, s))
-                {
-                    using (var g = Graphics.FromImage(c))
-                    {
-                        g.Clear(Color.White);
-                        using (var p = new Pen(Color.Black, 1f))
-                        {
-                            g.DrawLines(p, new[] { new Point(0, 0), new Point(s - 1, 0), new Point(s - 1, s - 1),
-                            new Point(0, s - 1), new Point(0, 0) });
-                        }
-                    }
-                    Cursor = new Cursor(c.GetHicon());
-                }
-            }
-            else
-               Cursor = new Cursor(Resources.Crosshair.Handle);
-        }
-
-        private void Canvas_MouseLeave(object sender, EventArgs e)
-        {
-            Cursor = Cursors.Default;
-            canvasCoordinateLabel.Text = "";
-        }
-
-        private void Canvas_SizeChanged(object sender, EventArgs e)
-        {
-            canvasSizeLabel.Text = canvas.Width + " x " + canvas.Height + "px";
-            int xOffset = canvas.Location.X;
-            int yOffset = canvas.Location.Y;
-            sSizePoint.Location = new Point(canvas.Width / 2 - 3 + xOffset, canvas.Height + yOffset);
-            eSizePoint.Location = new Point(canvas.Width + xOffset, canvas.Height / 2 - 3 + yOffset);
-            seSizePoint.Location = new Point(canvas.Width + xOffset, canvas.Height + yOffset);
-        }
-
-        private void Canvas_MouseDown(object sender, MouseEventArgs e)
+        private void Layer_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                x0 = e.X;
-                y0 = e.Y;
-                isDrawningStarted = true;
+                posX = e.X;
+                posY = e.Y;
+                if (isCanvasArea)
+                {
+                    operation = Operation.Drawning;                 
+                }
             }
         }
 
-        private void Canvas_MouseUp(object sender, MouseEventArgs e)
+        private void Layer_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                isDrawningStarted = false;
-                canvas.Invalidate();
-                canvas.Image = ImageProcessor.DrawControlToBitmap(canvas);
+                operation = Operation.None;
+                if (isDrawCompleted)
+                {
+                    isDrawCompleted = !SaveFigure();
+                }
+                layer.Invalidate();
             }
         }
 
-        private void Canvas_MouseMove(object sender, MouseEventArgs e)
+        private void Layer_MouseMove(object sender, MouseEventArgs e)
         {
-            canvasCoordinateLabel.Text = e.X.ToString() + ", " + e.Y.ToString() + "px";
-            if (isDrawningStarted)
+            posFX = e.X;
+            posFY = e.Y;
+            isCanvasArea = (e.X >= CANVAS_OFFSET && e.X <= canvas.Width + CANVAS_OFFSET 
+                && e.Y >= CANVAS_OFFSET && e.Y <= canvas.Height + CANVAS_OFFSET) ? true : false;
+            if (isCanvasArea)
             {
-                x1 = e.X;
-                y1 = e.Y;
-                if (drawningMode == DrawningMode.Free)
-                {
-                    using (var g = Graphics.FromImage(canvas.Image))
-                    {
-                        using (var pen = isMainColorActivated ? new Pen(color0) : new Pen(color1))
-                        {
-                            pen.Width = float.Parse(thicknessValue.Text);
-                            pen.SetLineCap(LineCap.Round, LineCap.Round, DashCap.Round);
-                            g.DrawLine(pen, x0, y0, e.X, e.Y);
-                            x0 = e.X;
-                            y0 = e.Y;
-                        }
-                    }
-                }
+                var xl = e.X - CANVAS_OFFSET;
+                var yl = e.Y - CANVAS_OFFSET;
+                layerCoordinateLabel.Text = "   " + xl + ", " + yl + "px";
                 if (drawningMode == DrawningMode.Eraser)
                 {
-                    using (var g = Graphics.FromImage(canvas.Image))
+                    var s = int.Parse(thicknessValue.Text);
+                    using (var c = new Bitmap(s, s))
                     {
-                        using (var pen = new Pen(Color.White))
+                        using (var g = Graphics.FromImage(c))
                         {
-                            pen.Width = float.Parse(thicknessValue.Text);
-                            pen.SetLineCap(LineCap.Round, LineCap.Round, DashCap.Round);
-                            g.DrawLine(pen, x0, y0, e.X, e.Y);
-                            x0 = e.X;
-                            y0 = e.Y;
+                            g.Clear(Color.White);
+                            using (var p = new Pen(Color.Black, 1f))
+                            {
+                                g.DrawLines(p, new[] { new Point(0, 0), new Point(s - 1, 0), new Point(s - 1, s - 1),
+                            new Point(0, s - 1), new Point(0, 0) });
+                            }
                         }
+                        Cursor = new Cursor(c.GetHicon());
                     }
                 }
-                canvas.Invalidate();
-            }            
-        }
-
-        private void Canvas_Paint(object sender, PaintEventArgs e)
-        {
-            if (isDrawningStarted && drawningMode != DrawningMode.Free && drawningMode != DrawningMode.Eraser)
-            {
-                CreateFigure(e);
-            }
-        }
-
-        private void CreateFigure(PaintEventArgs e)
-        {
-            if (drawningMode == DrawningMode.Line)
-            {
-                using (var pen = isMainColorActivated ? new Pen(color0) : new Pen(color1))
-                {
-                    pen.Width = float.Parse(thicknessValue.Text);
-                    pen.SetLineCap(LineCap.Round, LineCap.Round, DashCap.Round);
-                    e.Graphics.DrawLine(pen, x0, y0, x1, y1);
-                }
-            }
-            else if (drawningMode == DrawningMode.Rectangle || drawningMode == DrawningMode.Ellipse)
-            {
-                if (drawningMode == DrawningMode.Rectangle)
-                    drawFigureAction = e.Graphics.DrawRectangle;
-                else if (drawningMode == DrawningMode.Ellipse)
-                    drawFigureAction = e.Graphics.DrawEllipse;
-                using (var pen = isMainColorActivated ? new Pen(color0) : new Pen(color1))
-                {
-                    pen.Width = float.Parse(thicknessValue.Text);
-                    pen.SetLineCap(LineCap.Round, LineCap.Round, DashCap.Round);
-                    if (x1 >= x0 && y1 >= y0)
-                        drawFigureAction(pen, new Rectangle(x0, y0, x1 - x0, y1 - y0));
-                    else if (x1 >= x0 && y1 < y0)
-                    {
-                        e.Graphics.TranslateTransform(0, canvas.Height);
-                        e.Graphics.ScaleTransform(1, -1);
-                        drawFigureAction(pen, new Rectangle(x0, canvas.Height - y0, x1 - x0, y0 - y1));
-                    }
-                    else if (x1 < x0 && y1 >= y0)
-                    {
-                        e.Graphics.TranslateTransform(canvas.Width, 0);
-                        e.Graphics.ScaleTransform(-1, 1);
-                        drawFigureAction(pen, new Rectangle(canvas.Width - x0, y0, x0 - x1, y1 - y0));
-                    }
-                    else
-                    {
-                        e.Graphics.TranslateTransform(canvas.Width, canvas.Height);
-                        e.Graphics.ScaleTransform(-1, -1);
-                        drawFigureAction(pen, new Rectangle(canvas.Width - x0, canvas.Height - y0, x0 - x1, y0 - y1));
-                    }
-                }
+                else
+                    Cursor = new Cursor(Resources.Crosshair.Handle);                          
             }
             else
             {
-                if (drawningMode == DrawningMode.FilledRectangle)
-                    fillFigureAction = e.Graphics.FillRectangle;
-                else if (drawningMode == DrawningMode.FilledEllipse)
-                    fillFigureAction = e.Graphics.FillEllipse;
-                using (var brush = isMainColorActivated ? new SolidBrush(color0) : new SolidBrush(color1))
+                Cursor = Cursors.Default;
+                layerCoordinateLabel.Text = "";
+            }
+            if (operation == Operation.Drawning)
+            {
+                if (drawningMode == DrawningMode.Free || drawningMode == DrawningMode.Eraser)
                 {
-                    if (x1 >= x0 && y1 >= y0)
-                        fillFigureAction(brush, new Rectangle(x0, y0, x1 - x0, y1 - y0));
-                    else if (x1 >= x0 && y1 < y0)
+                    using (var g = Graphics.FromImage(canvas.Image))
                     {
-                        e.Graphics.TranslateTransform(0, canvas.Height);
-                        e.Graphics.ScaleTransform(1, -1);
-                        fillFigureAction(brush, new Rectangle(x0, canvas.Height - y0, x1 - x0, y0 - y1));
+                        using (var pen = drawningMode == DrawningMode.Eraser ? new Pen(Color.White) : 
+                            isMainColorActivated ? new Pen(color0) : new Pen(color1))
+                        {
+                            pen.Width = float.Parse(thicknessValue.Text);
+                            pen.SetLineCap(LineCap.Round, LineCap.Round, DashCap.Round);
+                            g.DrawLine(pen, posX - CANVAS_OFFSET, posY - CANVAS_OFFSET, e.X - CANVAS_OFFSET, e.Y - CANVAS_OFFSET);
+                            posX = e.X;
+                            posY = e.Y;
+                        }
                     }
-                    else if (x1 < x0 && y1 >= y0)
-                    {
-                        e.Graphics.TranslateTransform(canvas.Width, 0);
-                        e.Graphics.ScaleTransform(-1, 1);
-                        fillFigureAction(brush, new Rectangle(canvas.Width - x0, y0, x0 - x1, y1 - y0));
-                    }
+                }
+                layer.Invalidate();
+            }
+        }
+
+        private void Layer_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(canvas.Image, CANVAS_OFFSET, CANVAS_OFFSET);
+            layerSizeLabel.Text = "   " + canvas.Width + " x " + canvas.Height + "px";
+            sSizePoint.Location = new Point(canvas.Width / 2 - 3 + CANVAS_OFFSET, canvas.Height + CANVAS_OFFSET);
+            eSizePoint.Location = new Point(canvas.Width + CANVAS_OFFSET, canvas.Height / 2 - 3 + CANVAS_OFFSET);
+            seSizePoint.Location = new Point(canvas.Width + CANVAS_OFFSET, canvas.Height + CANVAS_OFFSET);
+            if (operation == Operation.Resize)
+            {
+                using (var pen = new Pen(Color.Gray, 1f))
+                {
+                    pen.DashStyle = DashStyle.Dash;
+                    if (sSizePointInvoked)
+                        e.Graphics.DrawRectangle(pen, new Rectangle(CANVAS_OFFSET, CANVAS_OFFSET, canvas.Width, canvas.Height + resizeDY));
+                    else if (eSizePointInvoked)
+                        e.Graphics.DrawRectangle(pen, new Rectangle(CANVAS_OFFSET, CANVAS_OFFSET, canvas.Width + resizeDX, canvas.Height));
                     else
+                        e.Graphics.DrawRectangle(pen, new Rectangle(CANVAS_OFFSET, CANVAS_OFFSET,
+                            canvas.Width + resizeDX, canvas.Height + resizeDY));
+                }
+            }
+            else if (operation == Operation.Drawning)
+            {
+                if (drawningMode != DrawningMode.Free && drawningMode != DrawningMode.Eraser)
+                    isDrawCompleted = CreateFigure(e);               
+            } 
+        }
+
+        private bool CreateFigure(PaintEventArgs e)
+        {
+            using (var r = new Region(new Rectangle(CANVAS_OFFSET, CANVAS_OFFSET, canvas.Width, canvas.Height)))
+            {
+                e.Graphics.SetClip(r, CombineMode.Replace);
+                if (drawningMode == DrawningMode.Line)
+                {
+                    using (var pen = isMainColorActivated ? new Pen(color0) : new Pen(color1))
                     {
-                        e.Graphics.TranslateTransform(canvas.Width, canvas.Height);
-                        e.Graphics.ScaleTransform(-1, -1);
-                        fillFigureAction(brush, new Rectangle(canvas.Width - x0, canvas.Height - y0, x0 - x1, y0 - y1));
+                        pen.Width = float.Parse(thicknessValue.Text);
+                        pen.SetLineCap(LineCap.Round, LineCap.Round, DashCap.Round);
+                        e.Graphics.DrawLine(pen, posX, posY, posFX, posFY);
+                    }
+                }
+                else if (drawningMode == DrawningMode.Rectangle || drawningMode == DrawningMode.Ellipse)
+                {
+                    if (drawningMode == DrawningMode.Rectangle)
+                        drawFigureAction = e.Graphics.DrawRectangle;
+                    else if (drawningMode == DrawningMode.Ellipse)
+                        drawFigureAction = e.Graphics.DrawEllipse;
+                    using (var pen = isMainColorActivated ? new Pen(color0) : new Pen(color1))
+                    {
+                        pen.Width = float.Parse(thicknessValue.Text);
+                        pen.SetLineCap(LineCap.Round, LineCap.Round, DashCap.Round);
+                        if (posFX >= posX && posFY >= posY)
+                            drawFigureAction(pen, new Rectangle(posX, posY, posFX - posX, posFY - posY));
+                        else if (posFX >= posX && posFY < posY)
+                        {
+                            e.Graphics.TranslateTransform(0, canvas.Height);
+                            e.Graphics.ScaleTransform(1, -1);
+                            drawFigureAction(pen, new Rectangle(posX, canvas.Height - posY, posFX - posX, posY - posFY));
+                        }
+                        else if (posFX < posX && posFY >= posY)
+                        {
+                            e.Graphics.TranslateTransform(canvas.Width, 0);
+                            e.Graphics.ScaleTransform(-1, 1);
+                            drawFigureAction(pen, new Rectangle(canvas.Width - posX, posY, posX - posFX, posFY - posY));
+                        }
+                        else
+                        {
+                            e.Graphics.TranslateTransform(canvas.Width, canvas.Height);
+                            e.Graphics.ScaleTransform(-1, -1);
+                            drawFigureAction(pen, new Rectangle(canvas.Width - posX, canvas.Height - posY, posX - posFX, posY - posFY));
+                        }
+                    }
+                }
+                else
+                {
+                    if (drawningMode == DrawningMode.FilledRectangle)
+                        fillFigureAction = e.Graphics.FillRectangle;
+                    else if (drawningMode == DrawningMode.FilledEllipse)
+                        fillFigureAction = e.Graphics.FillEllipse;
+                    using (var brush = isMainColorActivated ? new SolidBrush(color0) : new SolidBrush(color1))
+                    {
+                        if (posFX >= posX && posFY >= posY)
+                            fillFigureAction(brush, new Rectangle(posX, posY, posFX - posX, posFY - posY));
+                        else if (posFX >= posX && posFY < posY)
+                        {
+                            e.Graphics.TranslateTransform(0, canvas.Height);
+                            e.Graphics.ScaleTransform(1, -1);
+                            fillFigureAction(brush, new Rectangle(posX, canvas.Height - posY, posFX - posX, posY - posFY));
+                        }
+                        else if (posFX < posX && posFY >= posY)
+                        {
+                            e.Graphics.TranslateTransform(canvas.Width, 0);
+                            e.Graphics.ScaleTransform(-1, 1);
+                            fillFigureAction(brush, new Rectangle(canvas.Width - posX, posY, posX - posFX, posFY - posY));
+                        }
+                        else
+                        {
+                            e.Graphics.TranslateTransform(canvas.Width, canvas.Height);
+                            e.Graphics.ScaleTransform(-1, -1);
+                            fillFigureAction(brush, new Rectangle(canvas.Width - posX, canvas.Height - posY, posX - posFX, posY - posFY));
+                        }
                     }
                 }
             }
+            return true;
+        }
+
+        private bool SaveFigure()
+        {
+            using (var g = Graphics.FromImage(canvas.Image))
+            {
+                if (drawningMode == DrawningMode.Line)
+                {
+                    using (var pen = isMainColorActivated ? new Pen(color0) : new Pen(color1))
+                    {
+                        pen.Width = float.Parse(thicknessValue.Text);
+                        pen.SetLineCap(LineCap.Round, LineCap.Round, DashCap.Round);
+                        g.TranslateTransform(-CANVAS_OFFSET, -CANVAS_OFFSET);
+                        g.DrawLine(pen, posX, posY, posFX, posFY);
+                    }
+                }
+                else if (drawningMode == DrawningMode.Rectangle || drawningMode == DrawningMode.Ellipse)
+                {
+                    if (drawningMode == DrawningMode.Rectangle)
+                        drawFigureAction = g.DrawRectangle;
+                    else if (drawningMode == DrawningMode.Ellipse)
+                        drawFigureAction = g.DrawEllipse;
+                    using (var pen = isMainColorActivated ? new Pen(color0) : new Pen(color1))
+                    {
+                        pen.Width = float.Parse(thicknessValue.Text);
+                        pen.SetLineCap(LineCap.Round, LineCap.Round, DashCap.Round);
+                        if (posFX >= posX && posFY >= posY)
+                        {
+                            g.TranslateTransform(-CANVAS_OFFSET, -CANVAS_OFFSET);
+                            drawFigureAction(pen, new Rectangle(posX, posY, posFX - posX, posFY - posY));
+                        }
+                        else if (posFX >= posX && posFY < posY)
+                        {
+                            g.TranslateTransform(-CANVAS_OFFSET, canvas.Height - CANVAS_OFFSET);
+                            g.ScaleTransform(1, -1);
+                            drawFigureAction(pen, new Rectangle(posX, canvas.Height - posY, posFX - posX, posY - posFY));
+                        }
+                        else if (posFX < posX && posFY >= posY)
+                        {
+                            g.TranslateTransform(canvas.Width - CANVAS_OFFSET, -CANVAS_OFFSET);
+                            g.ScaleTransform(-1, 1);
+                            drawFigureAction(pen, new Rectangle(canvas.Width - posX, posY, posX - posFX, posFY - posY));
+                        }
+                        else
+                        {
+                            g.TranslateTransform(canvas.Width - CANVAS_OFFSET, canvas.Height - CANVAS_OFFSET);
+                            g.ScaleTransform(-1, -1);
+                            drawFigureAction(pen, new Rectangle(canvas.Width - posX, canvas.Height - posY, posX - posFX, posY - posFY));
+                        }
+                    }
+                }
+                else
+                {
+                    if (drawningMode == DrawningMode.FilledRectangle)
+                        fillFigureAction = g.FillRectangle;
+                    else if (drawningMode == DrawningMode.FilledEllipse)
+                        fillFigureAction = g.FillEllipse;
+                    using (var brush = isMainColorActivated ? new SolidBrush(color0) : new SolidBrush(color1))
+                    {
+                        if (posFX >= posX && posFY >= posY)
+                        {
+                            g.TranslateTransform(-CANVAS_OFFSET, -CANVAS_OFFSET);
+                            fillFigureAction(brush, new Rectangle(posX, posY, posFX - posX, posFY - posY));
+                        }
+                        else if (posFX >= posX && posFY < posY)
+                        {
+                            g.TranslateTransform(-CANVAS_OFFSET, canvas.Height - CANVAS_OFFSET);
+                            g.ScaleTransform(1, -1);
+                            fillFigureAction(brush, new Rectangle(posX, canvas.Height - posY, posFX - posX, posY - posFY));
+                        }
+                        else if (posFX < posX && posFY >= posY)
+                        {
+                            g.TranslateTransform(canvas.Width - CANVAS_OFFSET, -CANVAS_OFFSET);
+                            g.ScaleTransform(-1, 1);
+                            fillFigureAction(brush, new Rectangle(canvas.Width - posX, posY, posX - posFX, posFY - posY));
+                        }
+                        else
+                        {
+                            g.TranslateTransform(canvas.Width - CANVAS_OFFSET, canvas.Height - CANVAS_OFFSET);
+                            g.ScaleTransform(-1, -1);
+                            fillFigureAction(brush, new Rectangle(canvas.Width - posX, canvas.Height - posY, posX - posFX, posY - posFY));
+                        }
+                    }
+                }
+            }
+            return true;
         }
     }
 }
