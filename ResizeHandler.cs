@@ -30,8 +30,8 @@ namespace Paint
             if (e.Button == MouseButtons.Left)
             {
                 operation = Operation.Resize;
-                canvasInitialWidth = canvas.Width;
-                canvasInitialHeight = canvas.Height;
+                canvasInitialWidth = layer.CanvasWidth;
+                canvasInitialHeight = layer.CanvasHeight;
                 var s = sender as PictureBox;
                 if (s == sSizePoint)
                     sSizePointInvoked = true;
@@ -47,26 +47,26 @@ namespace Paint
                 operation = Operation.None;
                 if (sSizePointInvoked)
                 {
-                    canvas.Height += e.Y;
+                    layer.CanvasHeight += e.Y;
                     sSizePointInvoked = false;
                 }
                 else if (eSizePointInvoked)
                 {
-                    canvas.Width += e.X;
+                    layer.CanvasWidth += e.X;
                     eSizePointInvoked = false;
                 }
                 else
                 {
-                    canvas.Width += e.X;
-                    canvas.Height += e.Y;
+                    layer.CanvasWidth += e.X;
+                    layer.CanvasHeight += e.Y;
                 }
-                if (canvas.Width <= 0 || canvas.Height <= 0)
+                if (layer.CanvasWidth <= 0 || layer.CanvasHeight <= 0)
                 {
-                    canvas.Width = canvasInitialWidth;
-                    canvas.Height = canvasInitialHeight;
+                    layer.CanvasWidth = canvasInitialWidth;
+                    layer.CanvasHeight = canvasInitialHeight;
                 } 
                 else
-                    canvas.UpdateImage();
+                    layer.UpdateImage();
                 layer.Invalidate();
             }
         }

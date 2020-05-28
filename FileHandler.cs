@@ -1,10 +1,7 @@
 ﻿using Paint.Properties;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Threading;
-using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace Paint
@@ -12,23 +9,18 @@ namespace Paint
     public partial class MainForm
     {
         private string filePath, fileName, extension;
-
+        
         private void NewButton_Click(object sender, EventArgs e)
         {
             filePath = fileName = extension = null;
             Controls.Remove(sSizePoint);
             Controls.Remove(eSizePoint);
             Controls.Remove(seSizePoint);
-            try
-            {
-                sSizePoint.Dispose();
-                eSizePoint.Dispose();
-                seSizePoint.Dispose();
-                canvas.Dispose();
-                canvas = new Canvas(128, 128);
-                OnLoad(null);
-            }
-            catch (Exception ex) { Debug.WriteLine(ex.StackTrace); };
+            sSizePoint.Dispose();
+            eSizePoint.Dispose();
+            seSizePoint.Dispose();
+            layer.Image = new Bitmap(Resources.canvas, 128, 128);
+            OnLoad(null);
         }
 
         private void OpenButton_Click(object sender, EventArgs e)
@@ -54,8 +46,7 @@ namespace Paint
                     eSizePoint.Dispose();
                     seSizePoint.Dispose();
                     var bmpTemp = (Bitmap)Image.FromFile(ofd.FileName);
-                    canvas.Dispose();
-                    canvas = new Canvas(bmpTemp);
+                    layer.Image = new Bitmap(bmpTemp);
                     OnLoad(null);
                     filePath = ofd.FileName;
                     fileName = Path.GetFileNameWithoutExtension(ofd.FileName);
@@ -85,19 +76,19 @@ namespace Paint
                         fileName = Path.GetFileNameWithoutExtension(sfd.FileName);
                         extension = Path.GetExtension(sfd.FileName);
                         if (extension == ".bmp" || extension == ".dib")
-                            ImageProcessor.SaveImage(canvas.Image, "image/bmp", sfd.FileName);
+                            ImageProcessor.SaveImage((Bitmap)layer.Image, "image/bmp", sfd.FileName);
                         else if (extension == ".jpg" || extension == ".jpeg" || extension == ".jpe")
-                            ImageProcessor.SaveImage(canvas.Image, "image/jpeg", sfd.FileName);
+                            ImageProcessor.SaveImage((Bitmap)layer.Image, "image/jpeg", sfd.FileName);
                         else if (extension == ".jfif")
-                            ImageProcessor.SaveImage(canvas.Image, "image/pjpeg", sfd.FileName);
+                            ImageProcessor.SaveImage((Bitmap)layer.Image, "image/pjpeg", sfd.FileName);
                         else if (extension == ".gif")
-                            ImageProcessor.SaveImage(canvas.Image, "image/gif", sfd.FileName);
+                            ImageProcessor.SaveImage((Bitmap)layer.Image, "image/gif", sfd.FileName);
                         else if (extension == ".tif" || extension == ".tiff")
-                            ImageProcessor.SaveImage(canvas.Image, "image/tiff", sfd.FileName);
+                            ImageProcessor.SaveImage((Bitmap)layer.Image, "image/tiff", sfd.FileName);
                         else if (extension == ".png")
-                            ImageProcessor.SaveImage(canvas.Image, "image/png", sfd.FileName);
+                            ImageProcessor.SaveImage((Bitmap)layer.Image, "image/png", sfd.FileName);
                         else if (extension == ".ico")
-                            ImageProcessor.SaveImage(canvas.Image, "image/x-icon", sfd.FileName);
+                            ImageProcessor.SaveImage((Bitmap)layer.Image, "image/x-icon", sfd.FileName);
                         Text = fileName + " - Paint";
                     }
                 }
@@ -105,21 +96,21 @@ namespace Paint
             else
             {
                 if (extension == ".bmp" || extension == ".dib")
-                    ImageProcessor.SaveImage(canvas.Image, "image/bmp", filePath);
+                    ImageProcessor.SaveImage((Bitmap)layer.Image, "image/bmp", filePath);
                 else if (extension == ".jpg" || extension == ".jpeg" || extension == ".jpe")
-                    ImageProcessor.SaveImage(canvas.Image, "image/jpeg", filePath);
+                    ImageProcessor.SaveImage((Bitmap)layer.Image, "image/jpeg", filePath);
                 else if (extension == ".jfif")
-                    ImageProcessor.SaveImage(canvas.Image, "image/pjpeg", filePath);
+                    ImageProcessor.SaveImage((Bitmap)layer.Image, "image/pjpeg", filePath);
                 else if (extension == ".gif")
-                    ImageProcessor.SaveImage(canvas.Image, "image/gif", filePath);
+                    ImageProcessor.SaveImage((Bitmap)layer.Image, "image/gif", filePath);
                 else if (extension == ".tif" || extension == ".tiff")
-                    ImageProcessor.SaveImage(canvas.Image, "image/tiff", filePath);
+                    ImageProcessor.SaveImage((Bitmap)layer.Image, "image/tiff", filePath);
                 else if (extension == ".png")
-                    ImageProcessor.SaveImage(canvas.Image, "image/png", filePath);
+                    ImageProcessor.SaveImage((Bitmap)layer.Image, "image/png", filePath);
                 else if (extension == ".ico")
-                    ImageProcessor.SaveImage(canvas.Image, "image/x-icon", filePath);
+                    ImageProcessor.SaveImage((Bitmap)layer.Image, "image/x-icon", filePath);
                 else
-                    ImageProcessor.SaveImage(canvas.Image, "image/bmp", filePath);
+                    ImageProcessor.SaveImage((Bitmap)layer.Image, "image/bmp", filePath);
             }
         }
 
@@ -141,19 +132,19 @@ namespace Paint
                     fileName = Path.GetFileNameWithoutExtension(sfd.FileName);
                     extension = Path.GetExtension(sfd.FileName);
                     if (extension == ".bmp" || extension == ".dib")
-                        ImageProcessor.SaveImage(canvas.Image, "image/bmp", sfd.FileName);
+                        ImageProcessor.SaveImage((Bitmap)layer.Image, "image/bmp", sfd.FileName);
                     else if (extension == ".jpg" || extension == ".jpeg" || extension == ".jpe")
-                        ImageProcessor.SaveImage(canvas.Image, "image/jpeg", sfd.FileName);
+                        ImageProcessor.SaveImage((Bitmap)layer.Image, "image/jpeg", sfd.FileName);
                     else if (extension == ".jfif")
-                        ImageProcessor.SaveImage(canvas.Image, "image/pjpeg", sfd.FileName);
+                        ImageProcessor.SaveImage((Bitmap)layer.Image, "image/pjpeg", sfd.FileName);
                     else if (extension == ".gif")
-                        ImageProcessor.SaveImage(canvas.Image, "image/gif", sfd.FileName);
+                        ImageProcessor.SaveImage((Bitmap)layer.Image, "image/gif", sfd.FileName);
                     else if (extension == ".tif" || extension == ".tiff")
-                        ImageProcessor.SaveImage(canvas.Image, "image/tiff", sfd.FileName);
+                        ImageProcessor.SaveImage((Bitmap)layer.Image, "image/tiff", sfd.FileName);
                     else if (extension == ".png")
-                        ImageProcessor.SaveImage(canvas.Image, "image/png", sfd.FileName);
+                        ImageProcessor.SaveImage((Bitmap)layer.Image, "image/png", sfd.FileName);
                     else if (extension == ".ico")
-                        ImageProcessor.SaveImage(canvas.Image, "image/x-icon", sfd.FileName);
+                        ImageProcessor.SaveImage((Bitmap)layer.Image, "image/x-icon", sfd.FileName);
                     Text = fileName + " - Paint";
                 }
             }

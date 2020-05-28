@@ -3,7 +3,6 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
 
 namespace Paint
 {
@@ -13,12 +12,7 @@ namespace Paint
         private Operation operation;
         private DrawningMode drawningMode;
         private PictureBox sSizePoint, eSizePoint, seSizePoint;
-        private Canvas canvas;
         private Layer layer;
-
-        [DllImport("user32.dll")]
-        private static extern int SendMessage(IntPtr hwnd, int wMsg, int wParam, int lParam);
-        private const int WM_SETREDRAW = 0xB;
 
         private enum Operation
         {
@@ -28,9 +22,8 @@ namespace Paint
         }
 
         public MainForm()
-        {
-            canvas = new Canvas(128, 128);           
-            layer = new Layer();
+        {        
+            layer = new Layer(128, 128);
             layer.Name = "layer";
             layer.Dock = DockStyle.Fill;
             layer.AutoScroll = true;
@@ -38,7 +31,6 @@ namespace Paint
             layer.MouseUp += new MouseEventHandler(Layer_MouseUp);
             layer.MouseDown += new MouseEventHandler(Layer_MouseDown);
             layer.MouseMove += new MouseEventHandler(Layer_MouseMove);
-            layer.Scroll += new ScrollEventHandler(Layer_Scroll);
             Controls.Add(layer);
             InitializeComponent();
             SetColorButton(color0Button, color0);
@@ -48,13 +40,13 @@ namespace Paint
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            layerSizeLabel.Text = canvas.Width + " x " + canvas.Height + "px";
+            layerSizeLabel.Text = layer.CanvasWidth + " x " + layer.CanvasHeight + "px";
             Text = Resources.BASE_HEADER;
             sSizePoint = new PictureBox();
             ((ISupportInitialize)(sSizePoint)).BeginInit();
             sSizePoint.BackColor = SystemColors.Window;
             sSizePoint.BorderStyle = BorderStyle.FixedSingle;
-            sSizePoint.Location = new Point(canvas.Width / 2 - 3 + CANVAS_OFFSET, canvas.Height + CANVAS_OFFSET);
+            sSizePoint.Location = new Point(layer.CanvasWidth / 2 - 3 + CANVAS_OFFSET, layer.CanvasHeight + CANVAS_OFFSET);
             sSizePoint.Name = "sSizePoint";
             sSizePoint.Size = new Size(6, 6);
             sSizePoint.MouseEnter += new EventHandler(SizePoint_MouseEnter);
@@ -69,7 +61,7 @@ namespace Paint
             ((ISupportInitialize)(eSizePoint)).BeginInit();
             eSizePoint.BackColor = SystemColors.Window;
             eSizePoint.BorderStyle = BorderStyle.FixedSingle;
-            eSizePoint.Location = new Point(canvas.Width + CANVAS_OFFSET, canvas.Height / 2 - 3 + CANVAS_OFFSET);
+            eSizePoint.Location = new Point(layer.CanvasWidth + CANVAS_OFFSET, layer.CanvasHeight / 2 - 3 + CANVAS_OFFSET);
             eSizePoint.Name = "eSizePoint";
             eSizePoint.Size = new Size(6, 6);
             eSizePoint.MouseEnter += new EventHandler(SizePoint_MouseEnter);
@@ -84,7 +76,7 @@ namespace Paint
             ((ISupportInitialize)(seSizePoint)).BeginInit();
             seSizePoint.BackColor = SystemColors.Window;
             seSizePoint.BorderStyle = BorderStyle.FixedSingle;
-            seSizePoint.Location = new Point(canvas.Width + CANVAS_OFFSET, canvas.Height + CANVAS_OFFSET);
+            seSizePoint.Location = new Point(layer.CanvasWidth + CANVAS_OFFSET, layer.CanvasHeight + CANVAS_OFFSET);
             seSizePoint.Name = "seSizePoint";
             seSizePoint.Size = new Size(6, 6);
             seSizePoint.MouseEnter += new EventHandler(SizePoint_MouseEnter);
@@ -111,39 +103,19 @@ namespace Paint
             operation = Operation.None;
         }
 
-        private void Layer_Scroll(object sender, ScrollEventArgs e)
-        {
-            Control s = sender as Control;
-            if (e.Type == ScrollEventType.ThumbTrack)
-            {
-                SendMessage(s.Handle, WM_SETREDRAW, 1, 0);
-                s.Refresh();                        
-                SendMessage(s.Handle, WM_SETREDRAW, 0, 0);
-            }
-            else
-            {
-                SendMessage(s.Handle, WM_SETREDRAW, 1, 0);
-                s.Invalidate();
-            }
-        }
-
         private void ResizeButton_Click(object sender, EventArgs e)
-        {/*
-            using (var resizeDialog = new ResizeForm(canvas.Image.Width, canvas.Image.Height))
+        {
+            using (var resizeDialog = new ResizeForm(layer.Image.Width, layer.Image.Height))
             {
                 var result = resizeDialog.ShowDialog();
                 if (result == DialogResult.OK)
                 {
                     var width = resizeDialog.OutputWidth;
                     var height = resizeDialog.OutputHeight;
-                    if (canvas.Width != width || canvas.Height != height)
-                    {
-                        canvas.Width = width;
-                        canvas.Height = height;
-                        canvas.Image = new Bitmap(canvas.Image, new Size(canvas.Width, canvas.Height));
-                    }
+                    if (layer.CanvasWidth != width || layer.CanvasHeight != height)
+                        layer.ResizeImage(new Size(width, height));
                 }
-            }*/
+            }
         }
 
         private void ThicknessButton_Click(object sender, EventArgs e)
@@ -167,23 +139,22 @@ namespace Paint
             var s = sender as ToolStripMenuItem;
             if (s == rotateRightButton)
             {
-                
-                var width = canvas.Width;
-                canvas.Width = canvas.Height;
-                canvas.Height = width;
-                canvas.Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                var width = layer.CanvasWidth;
+                layer.CanvasWidth = layer.CanvasHeight;
+                layer.CanvasHeight = width;
+                layer.Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
             } 
             else if (s == rotateLeftButton)
             {
-                var width = canvas.Width;
-                canvas.Width = canvas.Height;
-                canvas.Height = width;
-                canvas.Image.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                var width = layer.CanvasWidth;
+                layer.CanvasWidth = layer.CanvasHeight;
+                layer.CanvasHeight = width;
+                layer.Image.RotateFlip(RotateFlipType.Rotate270FlipNone);
             }
             else if (s == flipHorizontalButton)
-                canvas.Image.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                layer.Image.RotateFlip(RotateFlipType.RotateNoneFlipX);
             else if (s == flipVerticalButton)
-                canvas.Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                layer.Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
             layer.Invalidate();
         }
     }

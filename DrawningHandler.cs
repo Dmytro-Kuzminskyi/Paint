@@ -18,8 +18,8 @@ namespace Paint
         {
             if (e.Button == MouseButtons.Left)
             {
-                posX = e.X;
-                posY = e.Y;
+                posX = e.X - layer.AutoScrollPosition.X;
+                posY = e.Y - layer.AutoScrollPosition.Y;
                 if (isCanvasArea)
                 {
                     operation = Operation.Drawning;                 
@@ -42,14 +42,14 @@ namespace Paint
 
         private void Layer_MouseMove(object sender, MouseEventArgs e)
         {
-            posFX = e.X;
-            posFY = e.Y;
-            isCanvasArea = (e.X >= CANVAS_OFFSET && e.X <= canvas.Width + CANVAS_OFFSET 
-                && e.Y >= CANVAS_OFFSET && e.Y <= canvas.Height + CANVAS_OFFSET) ? true : false;
+            posFX = e.X - layer.AutoScrollPosition.X;
+            posFY = e.Y - layer.AutoScrollPosition.Y;
+            isCanvasArea = (e.X >= CANVAS_OFFSET + layer.AutoScrollPosition.X && e.X <= layer.CanvasWidth + CANVAS_OFFSET + layer.AutoScrollPosition.X
+                && e.Y >= CANVAS_OFFSET + layer.AutoScrollPosition.Y && e.Y <= layer.CanvasHeight + CANVAS_OFFSET + layer.AutoScrollPosition.Y) ? true : false;
             if (isCanvasArea)
             {
-                var xl = e.X - CANVAS_OFFSET;
-                var yl = e.Y - CANVAS_OFFSET;
+                var xl = e.X - CANVAS_OFFSET - layer.AutoScrollPosition.X;
+                var yl = e.Y - CANVAS_OFFSET - layer.AutoScrollPosition.Y;
                 layerCoordinateLabel.Text = "   " + xl + ", " + yl + "px";
                 if (drawningMode == DrawningMode.Eraser)
                 {
@@ -80,16 +80,17 @@ namespace Paint
             {
                 if (drawningMode == DrawningMode.Free || drawningMode == DrawningMode.Eraser)
                 {
-                    using (var g = Graphics.FromImage(canvas.Image))
+                    using (var g = Graphics.FromImage(layer.Image))
                     {
                         using (var pen = drawningMode == DrawningMode.Eraser ? new Pen(Color.White) : 
                             isMainColorActivated ? new Pen(color0) : new Pen(color1))
                         {
                             pen.Width = float.Parse(thicknessValue.Text);
                             pen.SetLineCap(LineCap.Round, LineCap.Round, DashCap.Round);
-                            g.DrawLine(pen, posX - CANVAS_OFFSET, posY - CANVAS_OFFSET, e.X - CANVAS_OFFSET, e.Y - CANVAS_OFFSET);
-                            posX = e.X;
-                            posY = e.Y;
+                            g.DrawLine(pen, posX - CANVAS_OFFSET, posY - CANVAS_OFFSET,
+                                e.X - CANVAS_OFFSET - layer.AutoScrollPosition.X, e.Y - CANVAS_OFFSET - layer.AutoScrollPosition.Y);
+                            posX = e.X - layer.AutoScrollPosition.X;
+                            posY = e.Y - layer.AutoScrollPosition.Y;
                         }
                     }
                 }
@@ -99,23 +100,25 @@ namespace Paint
 
         private void Layer_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawImage(canvas.Image, CANVAS_OFFSET, CANVAS_OFFSET);
-            layerSizeLabel.Text = "   " + canvas.Width + " x " + canvas.Height + "px";
-            sSizePoint.Location = new Point(canvas.Width / 2 - 3 + CANVAS_OFFSET, canvas.Height + CANVAS_OFFSET);
-            eSizePoint.Location = new Point(canvas.Width + CANVAS_OFFSET, canvas.Height / 2 - 3 + CANVAS_OFFSET);
-            seSizePoint.Location = new Point(canvas.Width + CANVAS_OFFSET, canvas.Height + CANVAS_OFFSET);
+            layerSizeLabel.Text = "   " + layer.CanvasWidth + " x " + layer.CanvasHeight + "px";
+            sSizePoint.Location = new Point(layer.CanvasWidth / 2 - 3 + CANVAS_OFFSET + layer.AutoScrollPosition.X, 
+                layer.CanvasHeight + CANVAS_OFFSET + layer.AutoScrollPosition.Y);
+            eSizePoint.Location = new Point(layer.CanvasWidth + CANVAS_OFFSET + layer.AutoScrollPosition.X, 
+                layer.CanvasHeight / 2 - 3 + CANVAS_OFFSET + layer.AutoScrollPosition.Y);
+            seSizePoint.Location = new Point(layer.CanvasWidth + CANVAS_OFFSET + layer.AutoScrollPosition.X, 
+                layer.CanvasHeight + CANVAS_OFFSET + layer.AutoScrollPosition.Y);
             if (operation == Operation.Resize)
             {
                 using (var pen = new Pen(Color.Gray, 1f))
                 {
                     pen.DashStyle = DashStyle.Dash;
                     if (sSizePointInvoked)
-                        e.Graphics.DrawRectangle(pen, new Rectangle(CANVAS_OFFSET, CANVAS_OFFSET, canvas.Width, canvas.Height + resizeDY));
+                        e.Graphics.DrawRectangle(pen, new Rectangle(CANVAS_OFFSET, CANVAS_OFFSET, layer.CanvasWidth, layer.CanvasHeight + resizeDY));
                     else if (eSizePointInvoked)
-                        e.Graphics.DrawRectangle(pen, new Rectangle(CANVAS_OFFSET, CANVAS_OFFSET, canvas.Width + resizeDX, canvas.Height));
+                        e.Graphics.DrawRectangle(pen, new Rectangle(CANVAS_OFFSET, CANVAS_OFFSET, layer.CanvasWidth + resizeDX, layer.CanvasHeight));
                     else
                         e.Graphics.DrawRectangle(pen, new Rectangle(CANVAS_OFFSET, CANVAS_OFFSET,
-                            canvas.Width + resizeDX, canvas.Height + resizeDY));
+                            layer.CanvasWidth + resizeDX, layer.CanvasHeight + resizeDY));
                 }
             }
             if (operation == Operation.Drawning)
@@ -127,7 +130,7 @@ namespace Paint
 
         private bool CreateFigure(PaintEventArgs e)
         {
-            using (var r = new Region(new Rectangle(CANVAS_OFFSET, CANVAS_OFFSET, canvas.Width, canvas.Height)))
+            using (var r = new Region(new Rectangle(CANVAS_OFFSET, CANVAS_OFFSET, layer.CanvasWidth, layer.CanvasHeight)))
             {
                 e.Graphics.SetClip(r, CombineMode.Replace);
                 if (drawningMode == DrawningMode.Line)
@@ -153,21 +156,21 @@ namespace Paint
                             drawFigureAction(pen, new Rectangle(posX, posY, posFX - posX, posFY - posY));
                         else if (posFX >= posX && posFY < posY)
                         {
-                            e.Graphics.TranslateTransform(0, canvas.Height);
+                            e.Graphics.TranslateTransform(0, layer.CanvasHeight);
                             e.Graphics.ScaleTransform(1, -1);
-                            drawFigureAction(pen, new Rectangle(posX, canvas.Height - posY, posFX - posX, posY - posFY));
+                            drawFigureAction(pen, new Rectangle(posX, layer.CanvasHeight - posY, posFX - posX, posY - posFY));
                         }
                         else if (posFX < posX && posFY >= posY)
                         {
-                            e.Graphics.TranslateTransform(canvas.Width, 0);
+                            e.Graphics.TranslateTransform(layer.CanvasWidth, 0);
                             e.Graphics.ScaleTransform(-1, 1);
-                            drawFigureAction(pen, new Rectangle(canvas.Width - posX, posY, posX - posFX, posFY - posY));
+                            drawFigureAction(pen, new Rectangle(layer.CanvasWidth - posX, posY, posX - posFX, posFY - posY));
                         }
                         else
                         {
-                            e.Graphics.TranslateTransform(canvas.Width, canvas.Height);
+                            e.Graphics.TranslateTransform(layer.CanvasWidth, layer.CanvasHeight);
                             e.Graphics.ScaleTransform(-1, -1);
-                            drawFigureAction(pen, new Rectangle(canvas.Width - posX, canvas.Height - posY, posX - posFX, posY - posFY));
+                            drawFigureAction(pen, new Rectangle(layer.CanvasWidth - posX, layer.CanvasHeight - posY, posX - posFX, posY - posFY));
                         }
                     }
                 }
@@ -183,21 +186,21 @@ namespace Paint
                             fillFigureAction(brush, new Rectangle(posX, posY, posFX - posX, posFY - posY));
                         else if (posFX >= posX && posFY < posY)
                         {
-                            e.Graphics.TranslateTransform(0, canvas.Height);
+                            e.Graphics.TranslateTransform(0, layer.CanvasHeight);
                             e.Graphics.ScaleTransform(1, -1);
-                            fillFigureAction(brush, new Rectangle(posX, canvas.Height - posY, posFX - posX, posY - posFY));
+                            fillFigureAction(brush, new Rectangle(posX, layer.CanvasHeight - posY, posFX - posX, posY - posFY));
                         }
                         else if (posFX < posX && posFY >= posY)
                         {
-                            e.Graphics.TranslateTransform(canvas.Width, 0);
+                            e.Graphics.TranslateTransform(layer.CanvasWidth, 0);
                             e.Graphics.ScaleTransform(-1, 1);
-                            fillFigureAction(brush, new Rectangle(canvas.Width - posX, posY, posX - posFX, posFY - posY));
+                            fillFigureAction(brush, new Rectangle(layer.CanvasWidth - posX, posY, posX - posFX, posFY - posY));
                         }
                         else
                         {
-                            e.Graphics.TranslateTransform(canvas.Width, canvas.Height);
+                            e.Graphics.TranslateTransform(layer.CanvasWidth, layer.CanvasHeight);
                             e.Graphics.ScaleTransform(-1, -1);
-                            fillFigureAction(brush, new Rectangle(canvas.Width - posX, canvas.Height - posY, posX - posFX, posY - posFY));
+                            fillFigureAction(brush, new Rectangle(layer.CanvasWidth - posX, layer.CanvasHeight - posY, posX - posFX, posY - posFY));
                         }
                     }
                 }
@@ -207,7 +210,7 @@ namespace Paint
 
         private bool SaveFigure()
         {
-            using (var g = Graphics.FromImage(canvas.Image))
+            using (var g = Graphics.FromImage(layer.Image))
             {
                 if (drawningMode == DrawningMode.Line)
                 {
@@ -236,21 +239,21 @@ namespace Paint
                         }
                         else if (posFX >= posX && posFY < posY)
                         {
-                            g.TranslateTransform(-CANVAS_OFFSET, canvas.Height - CANVAS_OFFSET);
+                            g.TranslateTransform(-CANVAS_OFFSET, layer.CanvasHeight - CANVAS_OFFSET);
                             g.ScaleTransform(1, -1);
-                            drawFigureAction(pen, new Rectangle(posX, canvas.Height - posY, posFX - posX, posY - posFY));
+                            drawFigureAction(pen, new Rectangle(posX, layer.CanvasHeight - posY, posFX - posX, posY - posFY));
                         }
                         else if (posFX < posX && posFY >= posY)
                         {
-                            g.TranslateTransform(canvas.Width - CANVAS_OFFSET, -CANVAS_OFFSET);
+                            g.TranslateTransform(layer.CanvasWidth - CANVAS_OFFSET, -CANVAS_OFFSET);
                             g.ScaleTransform(-1, 1);
-                            drawFigureAction(pen, new Rectangle(canvas.Width - posX, posY, posX - posFX, posFY - posY));
+                            drawFigureAction(pen, new Rectangle(layer.CanvasWidth - posX, posY, posX - posFX, posFY - posY));
                         }
                         else
                         {
-                            g.TranslateTransform(canvas.Width - CANVAS_OFFSET, canvas.Height - CANVAS_OFFSET);
+                            g.TranslateTransform(layer.CanvasWidth - CANVAS_OFFSET, layer.CanvasHeight - CANVAS_OFFSET);
                             g.ScaleTransform(-1, -1);
-                            drawFigureAction(pen, new Rectangle(canvas.Width - posX, canvas.Height - posY, posX - posFX, posY - posFY));
+                            drawFigureAction(pen, new Rectangle(layer.CanvasWidth - posX, layer.CanvasHeight - posY, posX - posFX, posY - posFY));
                         }
                     }
                 }
@@ -269,21 +272,21 @@ namespace Paint
                         }
                         else if (posFX >= posX && posFY < posY)
                         {
-                            g.TranslateTransform(-CANVAS_OFFSET, canvas.Height - CANVAS_OFFSET);
+                            g.TranslateTransform(-CANVAS_OFFSET, layer.CanvasHeight - CANVAS_OFFSET);
                             g.ScaleTransform(1, -1);
-                            fillFigureAction(brush, new Rectangle(posX, canvas.Height - posY, posFX - posX, posY - posFY));
+                            fillFigureAction(brush, new Rectangle(posX, layer.CanvasHeight - posY, posFX - posX, posY - posFY));
                         }
                         else if (posFX < posX && posFY >= posY)
                         {
-                            g.TranslateTransform(canvas.Width - CANVAS_OFFSET, -CANVAS_OFFSET);
+                            g.TranslateTransform(layer.CanvasWidth - CANVAS_OFFSET, -CANVAS_OFFSET);
                             g.ScaleTransform(-1, 1);
-                            fillFigureAction(brush, new Rectangle(canvas.Width - posX, posY, posX - posFX, posFY - posY));
+                            fillFigureAction(brush, new Rectangle(layer.CanvasWidth - posX, posY, posX - posFX, posFY - posY));
                         }
                         else
                         {
-                            g.TranslateTransform(canvas.Width - CANVAS_OFFSET, canvas.Height - CANVAS_OFFSET);
+                            g.TranslateTransform(layer.CanvasWidth - CANVAS_OFFSET, layer.CanvasHeight - CANVAS_OFFSET);
                             g.ScaleTransform(-1, -1);
-                            fillFigureAction(brush, new Rectangle(canvas.Width - posX, canvas.Height - posY, posX - posFX, posY - posFY));
+                            fillFigureAction(brush, new Rectangle(layer.CanvasWidth - posX, layer.CanvasHeight - posY, posX - posFX, posY - posFY));
                         }
                     }
                 }
