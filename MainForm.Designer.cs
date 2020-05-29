@@ -29,11 +29,15 @@
         private void InitializeComponent()
         {
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-			this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+			this.bottomToolStrip = new System.Windows.Forms.ToolStrip();
 			this.layerCoordinateLabel = new System.Windows.Forms.ToolStripLabel();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.layerSizeLabel = new System.Windows.Forms.ToolStripLabel();
-			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+			this.zoomInButton = new System.Windows.Forms.ToolStripButton();
+			this.zoomOutButton = new System.Windows.Forms.ToolStripButton();
+			this.zoomLevelLabel = new System.Windows.Forms.ToolStripLabel();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+			this.mainToolStrip = new System.Windows.Forms.ToolStrip();
 			this.fileButton = new System.Windows.Forms.ToolStripDropDownButton();
 			this.newButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.openButton = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,26 +69,31 @@
 			this.drawFilledRectangleButton = new System.Windows.Forms.ToolStripButton();
 			this.drawEllipseButton = new System.Windows.Forms.ToolStripButton();
 			this.drawFilledEllipseButton = new System.Windows.Forms.ToolStripButton();
-			this.toolStrip2.SuspendLayout();
-			this.toolStrip1.SuspendLayout();
+			this.bottomToolStrip.SuspendLayout();
+			this.mainToolStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// toolStrip2
+			// bottomToolStrip
 			// 
-			this.toolStrip2.AutoSize = false;
-			this.toolStrip2.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.toolStrip2.Font = new System.Drawing.Font("Segoe UI", 9F);
-			this.toolStrip2.GripMargin = new System.Windows.Forms.Padding(0);
-			this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-			this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.bottomToolStrip.AutoSize = false;
+			this.bottomToolStrip.BackColor = System.Drawing.SystemColors.Window;
+			this.bottomToolStrip.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.bottomToolStrip.Font = new System.Drawing.Font("Segoe UI", 9F);
+			this.bottomToolStrip.GripMargin = new System.Windows.Forms.Padding(0);
+			this.bottomToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.bottomToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.layerCoordinateLabel,
             this.toolStripSeparator1,
-            this.layerSizeLabel});
-			this.toolStrip2.Location = new System.Drawing.Point(0, 425);
-			this.toolStrip2.Name = "toolStrip2";
-			this.toolStrip2.Size = new System.Drawing.Size(800, 25);
-			this.toolStrip2.TabIndex = 2;
-			this.toolStrip2.Text = "toolStrip2";
+            this.layerSizeLabel,
+            this.zoomInButton,
+            this.zoomOutButton,
+            this.zoomLevelLabel,
+            this.toolStripSeparator3});
+			this.bottomToolStrip.Location = new System.Drawing.Point(0, 425);
+			this.bottomToolStrip.Name = "bottomToolStrip";
+			this.bottomToolStrip.Size = new System.Drawing.Size(800, 25);
+			this.bottomToolStrip.TabIndex = 2;
+			this.bottomToolStrip.Text = "toolStrip2";
 			// 
 			// layerCoordinateLabel
 			// 
@@ -113,14 +122,53 @@
 			this.layerSizeLabel.Size = new System.Drawing.Size(100, 22);
 			this.layerSizeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// toolStrip1
+			// zoomInButton
 			// 
-			this.toolStrip1.AutoSize = false;
-			this.toolStrip1.BackColor = System.Drawing.SystemColors.Window;
-			this.toolStrip1.Font = new System.Drawing.Font("Segoe UI", 9F);
-			this.toolStrip1.GripMargin = new System.Windows.Forms.Padding(0);
-			this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.zoomInButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.zoomInButton.AutoToolTip = false;
+			this.zoomInButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.zoomInButton.Image = global::Paint.Properties.Resources.icons8_plus_64;
+			this.zoomInButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.zoomInButton.Name = "zoomInButton";
+			this.zoomInButton.Size = new System.Drawing.Size(23, 22);
+			this.zoomInButton.Text = "Zoom in";
+			this.zoomInButton.Click += new System.EventHandler(this.ZoomInButton_Click);
+			// 
+			// zoomOutButton
+			// 
+			this.zoomOutButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.zoomOutButton.AutoToolTip = false;
+			this.zoomOutButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.zoomOutButton.Image = global::Paint.Properties.Resources.icons8_minus_64;
+			this.zoomOutButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.zoomOutButton.Name = "zoomOutButton";
+			this.zoomOutButton.Size = new System.Drawing.Size(23, 22);
+			this.zoomOutButton.Text = "Zoom out";
+			this.zoomOutButton.Click += new System.EventHandler(this.ZoomOutButton_Click);
+			// 
+			// zoomLevelLabel
+			// 
+			this.zoomLevelLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.zoomLevelLabel.AutoSize = false;
+			this.zoomLevelLabel.Name = "zoomLevelLabel";
+			this.zoomLevelLabel.Size = new System.Drawing.Size(40, 22);
+			this.zoomLevelLabel.Text = "Zoom";
+			this.zoomLevelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+			// 
+			// mainToolStrip
+			// 
+			this.mainToolStrip.AutoSize = false;
+			this.mainToolStrip.BackColor = System.Drawing.SystemColors.Window;
+			this.mainToolStrip.Font = new System.Drawing.Font("Segoe UI", 9F);
+			this.mainToolStrip.GripMargin = new System.Windows.Forms.Padding(0);
+			this.mainToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+			this.mainToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileButton,
             this.toolStripSeparator2,
             this.resizeButton,
@@ -140,11 +188,11 @@
             this.drawFilledRectangleButton,
             this.drawEllipseButton,
             this.drawFilledEllipseButton});
-			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(800, 40);
-			this.toolStrip1.TabIndex = 3;
-			this.toolStrip1.Text = "toolStrip1";
+			this.mainToolStrip.Location = new System.Drawing.Point(0, 0);
+			this.mainToolStrip.Name = "mainToolStrip";
+			this.mainToolStrip.Size = new System.Drawing.Size(800, 40);
+			this.mainToolStrip.TabIndex = 3;
+			this.mainToolStrip.Text = "toolStrip1";
 			// 
 			// fileButton
 			// 
@@ -432,26 +480,26 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.AutoScroll = true;
 			this.ClientSize = new System.Drawing.Size(800, 450);
-			this.Controls.Add(this.toolStrip1);
-			this.Controls.Add(this.toolStrip2);
+			this.Controls.Add(this.mainToolStrip);
+			this.Controls.Add(this.bottomToolStrip);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.KeyPreview = true;
 			this.Name = "MainForm";
 			this.Text = "Paint";
 			this.Load += new System.EventHandler(this.MainForm_Load);
-			this.toolStrip2.ResumeLayout(false);
-			this.toolStrip2.PerformLayout();
-			this.toolStrip1.ResumeLayout(false);
-			this.toolStrip1.PerformLayout();
+			this.bottomToolStrip.ResumeLayout(false);
+			this.bottomToolStrip.PerformLayout();
+			this.mainToolStrip.ResumeLayout(false);
+			this.mainToolStrip.PerformLayout();
 			this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.ToolStrip toolStrip2;
+        private System.Windows.Forms.ToolStrip bottomToolStrip;
         private System.Windows.Forms.ToolStripLabel layerCoordinateLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStrip mainToolStrip;
         private System.Windows.Forms.ToolStripDropDownButton fileButton;
         private System.Windows.Forms.ToolStripMenuItem newButton;
         private System.Windows.Forms.ToolStripMenuItem openButton;
@@ -484,6 +532,10 @@
         private System.Windows.Forms.ToolStripButton drawFilledEllipseButton;
         private System.Windows.Forms.ToolStripButton eraserButton;
         private System.Windows.Forms.ToolStripLabel layerSizeLabel;
+		private System.Windows.Forms.ToolStripButton zoomInButton;
+		private System.Windows.Forms.ToolStripButton zoomOutButton;
+		private System.Windows.Forms.ToolStripLabel zoomLevelLabel;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 	}
 }
 

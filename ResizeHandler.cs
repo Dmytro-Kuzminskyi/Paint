@@ -47,24 +47,24 @@ namespace Paint
                 operation = Operation.None;
                 if (sSizePointInvoked)
                 {
-                    layer.CanvasHeight += e.Y;
+                    layer.CanvasHeight += (int)(e.Y / zoomFactor);
                     sSizePointInvoked = false;
                 }
                 else if (eSizePointInvoked)
                 {
-                    layer.CanvasWidth += e.X;
+                    layer.CanvasWidth += (int)(e.X / zoomFactor);
                     eSizePointInvoked = false;
                 }
                 else
                 {
-                    layer.CanvasWidth += e.X;
-                    layer.CanvasHeight += e.Y;
+                    layer.CanvasWidth += (int)(e.X / zoomFactor);
+                    layer.CanvasHeight += (int)(e.Y / zoomFactor);
                 }
                 if (layer.CanvasWidth <= 0 || layer.CanvasHeight <= 0)
                 {
                     layer.CanvasWidth = canvasInitialWidth;
                     layer.CanvasHeight = canvasInitialHeight;
-                } 
+                }
                 else
                     layer.UpdateImage();
                 layer.Invalidate();
@@ -77,16 +77,16 @@ namespace Paint
             {
                 if (sSizePointInvoked)
                 {
-                    resizeDY = e.Y;
+                    resizeDY = (int)(e.Y / zoomFactor);
                 }
                 else if (eSizePointInvoked)
                 {
-                    resizeDX = e.X;
+                    resizeDX = (int)(e.X / zoomFactor);
                 }
                 else
                 {
-                    resizeDX = e.X;
-                    resizeDY = e.Y;
+                    resizeDX = (int)(e.X / zoomFactor);
+                    resizeDY = (int)(e.Y / zoomFactor);
                 }
                 layer.Invalidate();
             }

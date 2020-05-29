@@ -7,10 +7,11 @@ namespace Paint
 {
     public class Layer : Panel
     {
+        private TrackBar tb;
         private Image mImage;
         public int CanvasWidth { get; set; }
         public int CanvasHeight { get; set; }
-        public Layer(int width, int height)
+        public Layer(int width, int height, TrackBar tb)
         {
             SetStyle(
                 ControlStyles.UserPaint |
@@ -21,6 +22,7 @@ namespace Paint
             CanvasWidth = width;
             CanvasHeight = height;
             mImage = new Bitmap(Resources.canvas, new Size(width, height));
+            this.tb = tb;
         }
 
         public Image Image
@@ -29,11 +31,11 @@ namespace Paint
             set
             {
                 mImage = value;
-                if (value == null) 
+                if (value == null)
                 {
                     CanvasWidth = 0;
                     CanvasHeight = 0;
-                    AutoScrollMinSize = new Size(0, 0); 
+                    AutoScrollMinSize = new Size(0, 0);
                 }
                 else
                 {
@@ -89,7 +91,6 @@ namespace Paint
             Bitmap b = new Bitmap(destWidth, destHeight);
             using (var g = Graphics.FromImage(b))
             {
-                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 g.DrawImage(mImage, 0, 0, destWidth, destHeight);
             }
             Image = b;

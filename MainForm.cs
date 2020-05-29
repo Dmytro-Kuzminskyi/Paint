@@ -8,11 +8,13 @@ namespace Paint
 {
     public partial class MainForm : Form
     {
-        public const int CANVAS_OFFSET = 16;
+        public const int CANVAS_OFFSET = 16;        
         private Operation operation;
         private DrawningMode drawningMode;
         private PictureBox sSizePoint, eSizePoint, seSizePoint;
         private Layer layer;
+        private TrackBarItem zoomTrackBarItem;
+        private TrackBar zoomTrackBar;
 
         private enum Operation
         {
@@ -22,11 +24,15 @@ namespace Paint
         }
 
         public MainForm()
-        {        
-            layer = new Layer(128, 128);
+        {
+            zoomTrackBarItem = new TrackBarItem();
+            zoomTrackBarItem.Alignment = ToolStripItemAlignment.Right;
+            zoomTrackBarItem.Size = new Size(100, 22);
+            zoomTrackBar = zoomTrackBarItem.Initialize();
+            layer = new Layer(128, 128, zoomTrackBar);
             layer.Name = "layer";
             layer.Dock = DockStyle.Fill;
-            layer.AutoScroll = true;
+            layer.AutoScrollMargin = new Size(CANVAS_OFFSET, CANVAS_OFFSET);
             layer.Paint += new PaintEventHandler(Layer_Paint);
             layer.MouseUp += new MouseEventHandler(Layer_MouseUp);
             layer.MouseDown += new MouseEventHandler(Layer_MouseDown);
@@ -36,6 +42,13 @@ namespace Paint
             SetColorButton(color0Button, color0);
             SetColorButton(color1Button, color1);
             color0Button.BackColor = Color.LightBlue;
+            bottomToolStrip.Items.Insert(4, zoomTrackBarItem);
+            zoomTrackBar = zoomTrackBarItem.Initialize();
+            zoomTrackBar.ValueChanged += new EventHandler(ZoomLevel_Changed);
+            zoomTrackBar.Minimum = 0;
+            zoomTrackBar.Maximum = 6;
+            zoomTrackBar.Value = 3;
+            zoomTrackBar.TickStyle = TickStyle.None;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -156,6 +169,6 @@ namespace Paint
             else if (s == flipVerticalButton)
                 layer.Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
             layer.Invalidate();
-        }
+        }      
     }
 }

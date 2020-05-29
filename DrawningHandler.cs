@@ -22,7 +22,7 @@ namespace Paint
                 posY = e.Y - layer.AutoScrollPosition.Y;
                 if (isCanvasArea)
                 {
-                    operation = Operation.Drawning;                 
+                    operation = Operation.Drawning;
                 }
             }
         }
@@ -69,7 +69,7 @@ namespace Paint
                     }
                 }
                 else
-                    Cursor = new Cursor(Resources.Crosshair.Handle);                          
+                    Cursor = new Cursor(Resources.Crosshair.Handle);
             }
             else
             {
@@ -82,7 +82,7 @@ namespace Paint
                 {
                     using (var g = Graphics.FromImage(layer.Image))
                     {
-                        using (var pen = drawningMode == DrawningMode.Eraser ? new Pen(Color.White) : 
+                        using (var pen = drawningMode == DrawningMode.Eraser ? new Pen(Color.White) :
                             isMainColorActivated ? new Pen(color0) : new Pen(color1))
                         {
                             pen.Width = float.Parse(thicknessValue.Text);
@@ -101,11 +101,11 @@ namespace Paint
         private void Layer_Paint(object sender, PaintEventArgs e)
         {
             layerSizeLabel.Text = "   " + layer.CanvasWidth + " x " + layer.CanvasHeight + "px";
-            sSizePoint.Location = new Point(layer.CanvasWidth / 2 - 3 + CANVAS_OFFSET + layer.AutoScrollPosition.X, 
+            sSizePoint.Location = new Point(layer.CanvasWidth / 2 - 3 + CANVAS_OFFSET + layer.AutoScrollPosition.X,
                 layer.CanvasHeight + CANVAS_OFFSET + layer.AutoScrollPosition.Y);
-            eSizePoint.Location = new Point(layer.CanvasWidth + CANVAS_OFFSET + layer.AutoScrollPosition.X, 
+            eSizePoint.Location = new Point(layer.CanvasWidth + CANVAS_OFFSET + layer.AutoScrollPosition.X,
                 layer.CanvasHeight / 2 - 3 + CANVAS_OFFSET + layer.AutoScrollPosition.Y);
-            seSizePoint.Location = new Point(layer.CanvasWidth + CANVAS_OFFSET + layer.AutoScrollPosition.X, 
+            seSizePoint.Location = new Point(layer.CanvasWidth + CANVAS_OFFSET + layer.AutoScrollPosition.X,
                 layer.CanvasHeight + CANVAS_OFFSET + layer.AutoScrollPosition.Y);
             if (operation == Operation.Resize)
             {
@@ -124,8 +124,8 @@ namespace Paint
             if (operation == Operation.Drawning)
             {
                 if (drawningMode != DrawningMode.Free && drawningMode != DrawningMode.Eraser)
-                    isDrawCompleted = CreateFigure(e);               
-            } 
+                    isDrawCompleted = CreateFigure(e);
+            }
         }
 
         private bool CreateFigure(PaintEventArgs e)
