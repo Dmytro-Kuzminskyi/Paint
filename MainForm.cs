@@ -12,9 +12,9 @@ namespace Paint
         private Operation operation;
         private DrawningMode drawningMode;
         private PictureBox sSizePoint, eSizePoint, seSizePoint;
-        private Layer layer;
-        private TrackBarItem zoomTrackBarItem;
-        private TrackBar zoomTrackBar;
+        private readonly Layer layer;
+        private readonly TrackBarItem zoomTrackBarItem;
+        private readonly TrackBar zoomTrackBar;
 
         private enum Operation
         {

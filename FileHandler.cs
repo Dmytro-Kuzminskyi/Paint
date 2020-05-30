@@ -9,7 +9,12 @@ namespace Paint
     public partial class MainForm
     {
         private string filePath, fileName, extension;
-        
+
+        private void AboutButton_Click(object sender, EventArgs e)
+        {
+            using (var aboutWindow = new AboutWindow())
+                aboutWindow.ShowDialog();
+        }
         private void NewButton_Click(object sender, EventArgs e)
         {
             filePath = fileName = extension = null;

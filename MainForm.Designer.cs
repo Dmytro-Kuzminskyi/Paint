@@ -43,6 +43,7 @@
 			this.openButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveAsButton = new System.Windows.Forms.ToolStripMenuItem();
+			this.aboutButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.resizeButton = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -202,7 +203,8 @@
             this.newButton,
             this.openButton,
             this.saveButton,
-            this.saveAsButton});
+            this.saveAsButton,
+            this.aboutButton});
 			this.fileButton.Image = ((System.Drawing.Image)(resources.GetObject("fileButton.Image")));
 			this.fileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.fileButton.Name = "fileButton";
@@ -213,7 +215,7 @@
 			// 
 			this.newButton.Image = global::Paint.Properties.Resources.icons8_add_file_50;
 			this.newButton.Name = "newButton";
-			this.newButton.Size = new System.Drawing.Size(112, 22);
+			this.newButton.Size = new System.Drawing.Size(180, 22);
 			this.newButton.Text = "New";
 			this.newButton.Click += new System.EventHandler(this.NewButton_Click);
 			// 
@@ -221,7 +223,7 @@
 			// 
 			this.openButton.Image = global::Paint.Properties.Resources.icons8_file_50;
 			this.openButton.Name = "openButton";
-			this.openButton.Size = new System.Drawing.Size(112, 22);
+			this.openButton.Size = new System.Drawing.Size(180, 22);
 			this.openButton.Text = "Open";
 			this.openButton.Click += new System.EventHandler(this.OpenButton_Click);
 			// 
@@ -229,7 +231,7 @@
 			// 
 			this.saveButton.Image = global::Paint.Properties.Resources.icons8_save_50;
 			this.saveButton.Name = "saveButton";
-			this.saveButton.Size = new System.Drawing.Size(112, 22);
+			this.saveButton.Size = new System.Drawing.Size(180, 22);
 			this.saveButton.Text = "Save";
 			this.saveButton.Click += new System.EventHandler(this.SaveButton_Click);
 			// 
@@ -237,9 +239,17 @@
 			// 
 			this.saveAsButton.Image = global::Paint.Properties.Resources.icons8_save_as_50;
 			this.saveAsButton.Name = "saveAsButton";
-			this.saveAsButton.Size = new System.Drawing.Size(112, 22);
+			this.saveAsButton.Size = new System.Drawing.Size(180, 22);
 			this.saveAsButton.Text = "Save as";
 			this.saveAsButton.Click += new System.EventHandler(this.SaveAsButton_Click);
+			// 
+			// aboutButton
+			// 
+			this.aboutButton.Image = global::Paint.Properties.Resources.icons8_info_64;
+			this.aboutButton.Name = "aboutButton";
+			this.aboutButton.Size = new System.Drawing.Size(180, 22);
+			this.aboutButton.Text = "About";
+			this.aboutButton.Click += new System.EventHandler(this.AboutButton_Click);
 			// 
 			// toolStripSeparator2
 			// 
@@ -536,6 +546,7 @@
 		private System.Windows.Forms.ToolStripButton zoomOutButton;
 		private System.Windows.Forms.ToolStripLabel zoomLevelLabel;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+		private System.Windows.Forms.ToolStripMenuItem aboutButton;
 	}
 }
 
